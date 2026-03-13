@@ -17,7 +17,10 @@ export type SessionUser = {
 import { createHmac, timingSafeEqual } from "crypto"
 
 const SECRET = process.env.SESSION_SECRET
-if (!SECRET && process.env.NODE_ENV === "production") {
+const isProd = process.env.NODE_ENV === "production"
+const isBuild = process.env.NEXT_PHASE === "phase-production-build"
+
+if (!SECRET && isProd && !isBuild) {
   throw new Error("CRITICAL: SESSION_SECRET must be set in production environment")
 }
 const ACTUAL_SECRET = SECRET || "cektoko-fallback-secret-12345"
