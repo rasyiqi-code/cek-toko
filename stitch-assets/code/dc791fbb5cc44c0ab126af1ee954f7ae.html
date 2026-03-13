@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cek Toko - Stock Opname</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f96b06",
+                        "background-light": "#FDF9F1",
+                        "background-dark": "#23170f",
+                        "text-main": "#4A3B32",
+                        "text-muted": "#A89B92",
+                        "accent-success": "#34C759",
+                        "surface": "#FFFFFF",
+                        "surface-dark": "#3A2A20"
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "md": "12px",
+                        "lg": "20px",
+                        "xl": "24px",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft': '0 8px 16px rgba(74, 59, 50, 0.08)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Spline Sans', sans-serif;
+            overscroll-behavior-y: none;
+        }
+        
+        /* Custom styles for animations that would normally be JS-driven */
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+        
+        .count-bounce:active {
+            animation: bounce 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes bounce {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-slate-100 min-h-screen flex flex-col overflow-hidden font-display selection:bg-primary/30">
+<!-- Top App Bar -->
+<header class="flex items-center p-4 pb-2 justify-between shrink-0">
+<button aria-label="Kembali" class="flex size-14 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors btn-press">
+<span class="material-symbols-outlined text-3xl">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold leading-tight tracking-tight flex-1 text-center pr-14">Stock Opname</h1>
+</header>
+<!-- Progress Section -->
+<div class="flex flex-col gap-3 p-6 shrink-0">
+<div class="flex justify-between items-center">
+<p class="text-lg font-semibold text-text-main dark:text-slate-200">Barang 1 dari 15</p>
+<span class="text-sm font-medium text-text-muted">Kategori: Rokok</span>
+</div>
+<div class="h-3 rounded-full bg-[#E8DFD5] dark:bg-surface-dark overflow-hidden">
+<div class="h-full rounded-full bg-accent-success transition-all duration-500 ease-out" style="width: 6.66%;"></div>
+</div>
+</div>
+<!-- Main Content Area (Focus Card) -->
+<main class="flex-1 flex flex-col items-center justify-center px-6 pb-24 relative w-full max-w-md mx-auto">
+<!-- Focus Card -->
+<div class="w-full bg-surface dark:bg-surface-dark rounded-[24px] shadow-soft p-6 flex flex-col items-center gap-6 transform transition-transform duration-300">
+<!-- Product Image -->
+<div class="w-40 h-40 bg-background-light dark:bg-black/20 rounded-[20px] flex items-center justify-center overflow-hidden border-2 border-primary/10">
+<img alt="Ilustrasi bungkus rokok" class="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal" data-alt="Pack of cigarettes on plain background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUIzr0_pmXYmEB-93MbLkQ_CplTP1BMGlZvbVMIDzKboTWOXUShue32XUrUVIQTO_xTWB5FQwRfNNc06ej4IqvfoBYH8hJtXzol2Y9a-zXwF40nnAosxeiwzqW_R6L0FUNkbcDtbQ9cWK_KxS-wVlMgjgQDEkUCJigzeaCxy2V-3j0Fdn4tsJblbetJBWzBBaA3jGphhYFlHXtmNm8sGuXRsVEwSf0QqC18IrVYfmW2HkZLPc4QbwmPI9WHFhvTabwQ8mKDhWOwQA"/>
+</div>
+<!-- Product Prompt -->
+<div class="text-center space-y-2 w-full">
+<h2 class="text-2xl font-bold leading-snug">Berapa sisa<br/><span class="text-primary">Gudang Garam Filter?</span></h2>
+<p class="text-text-muted dark:text-slate-400 font-medium text-lg">Stok tercatat: 24</p>
+</div>
+</div>
+<!-- Massive Stepper Controls -->
+<div class="w-full flex items-center justify-between mt-10 px-4">
+<!-- Minus Button -->
+<button aria-label="Kurangi jumlah" class="w-[72px] h-[72px] rounded-full bg-surface dark:bg-surface-dark shadow-soft flex items-center justify-center text-primary border-2 border-transparent hover:border-primary/20 active:bg-primary/10 transition-all btn-press">
+<span class="material-symbols-outlined text-4xl font-bold">remove</span>
+</button>
+<!-- Current Count -->
+<div class="flex-1 text-center select-none">
+<span class="text-[64px] font-bold leading-none tracking-tighter text-text-main dark:text-white count-bounce inline-block transition-transform">24</span>
+</div>
+<!-- Plus Button -->
+<button aria-label="Tambah jumlah" class="w-[72px] h-[72px] rounded-full bg-primary shadow-soft flex items-center justify-center text-white hover:bg-primary/90 active:bg-primary/80 transition-all btn-press">
+<span class="material-symbols-outlined text-4xl font-bold">add</span>
+</button>
+</div>
+</main>
+<!-- Bottom Action Area -->
+<div class="fixed bottom-0 left-0 w-full p-4 pb-8 bg-gradient-to-t from-background-light via-background-light to-transparent dark:from-background-dark dark:via-background-dark pointer-events-none flex justify-center">
+<button class="w-full max-w-md h-[64px] bg-primary text-white text-xl font-bold rounded-full shadow-lg hover:shadow-xl active:scale-[0.98] transition-all pointer-events-auto flex items-center justify-center gap-2 btn-press">
+<span>Lanjut</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</body></html>

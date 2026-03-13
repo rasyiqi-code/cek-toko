@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard - Cek Toko</title>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FF6B00",
+                        "background-light": "#FDF9F1",
+                        "background-dark": "#23170f",
+                        "surface": "#FFFFFF",
+                        "text-main": "#4A3B32",
+                        "muted": "#A89B92",
+                        "accent": "#34C759",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "sm": "12px",
+                        "md": "20px",
+                        "lg": "24px",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft': '0 8px 16px rgba(74, 59, 50, 0.08)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Spline Sans', sans-serif;
+            background-color: #FDF9F1; /* Fallback */
+            color: #4A3B32;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .stat-card:active {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
+        }
+
+        .stat-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main min-h-screen flex justify-center">
+<!-- Mobile Container -->
+<div class="w-full max-w-md bg-background-light relative min-h-screen pb-[100px] overflow-hidden">
+<!-- Header -->
+<div class="flex items-center justify-between p-6 pt-10">
+<h1 class="text-[28px] font-extrabold leading-tight tracking-tight text-text-main">
+                Halo, Juragan!
+            </h1>
+<!-- Offline Badge -->
+<div class="flex items-center gap-1.5 bg-muted/20 px-3 py-1.5 rounded-full">
+<span class="material-symbols-outlined text-[16px] text-muted">cloud_off</span>
+<span class="text-sm font-semibold text-muted">Offline</span>
+</div>
+</div>
+<!-- Quick Stats Grid -->
+<div class="grid grid-cols-2 gap-4 px-6">
+<!-- Stat Card 1 -->
+<button class="stat-card flex flex-col justify-between h-[120px] bg-surface rounded-md p-4 shadow-soft text-left w-full border-2 border-transparent focus:outline-none focus:border-primary">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary/10 text-primary mb-2">
+<span class="material-symbols-outlined text-[24px]">warning</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-muted leading-tight mb-1">Stok Menipis</p>
+<p class="text-xl font-extrabold text-text-main leading-none">5 Barang</p>
+</div>
+</button>
+<!-- Stat Card 2 -->
+<button class="stat-card flex flex-col justify-between h-[120px] bg-surface rounded-md p-4 shadow-soft text-left w-full border-2 border-transparent focus:outline-none focus:border-primary">
+<div class="flex items-center justify-center size-10 rounded-full bg-accent/10 text-accent mb-2">
+<span class="material-symbols-outlined text-[24px]">inventory_2</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-muted leading-tight mb-1">Barang Masuk</p>
+<p class="text-xl font-extrabold text-text-main leading-none">12</p>
+</div>
+</button>
+<!-- Stat Card 3 -->
+<button class="stat-card flex flex-col justify-between h-[120px] bg-surface rounded-md p-4 shadow-soft text-left w-full border-2 border-transparent focus:outline-none focus:border-primary">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary/10 text-primary mb-2">
+<span class="material-symbols-outlined text-[24px]">category</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-muted leading-tight mb-1">Total Produk</p>
+<p class="text-xl font-extrabold text-text-main leading-none">84</p>
+</div>
+</button>
+<!-- Stat Card 4 -->
+<button class="stat-card flex flex-col justify-between h-[120px] bg-surface rounded-md p-4 shadow-soft text-left w-full border-2 border-transparent focus:outline-none focus:border-primary">
+<div class="flex items-center justify-center size-10 rounded-full bg-accent/10 text-accent mb-2">
+<span class="material-symbols-outlined text-[24px]">check_circle</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-muted leading-tight mb-1">Status Toko</p>
+<p class="text-xl font-extrabold text-text-main leading-none">Aman</p>
+</div>
+</button>
+</div>
+<!-- Illustration Section (If all good, or general welcoming) -->
+<div class="mt-8 px-6 flex flex-col items-center text-center">
+<div class="w-full max-w-[280px] aspect-video bg-surface rounded-lg shadow-soft mb-6 bg-cover bg-center" data-alt="Abstract colorful shapes representing organized items" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDgeqixv9a0udTrNckSC-5uIpUyhKosnTQMJ38jIKsn8K30cusSRiGwrIYvkEiBzRqSAvQsLDHQnYKL3phYfPfZX24mXfV0w5w8N2lKtJwrG6GGJKhzcDU83jve6GmTHIKAT1IFky3SYKh5UDKnt32TzJII7xW5oJM7pu6-CNMMjjZkOgvPbs0oUgWhM3MldpLllnHfKDUE6_9i3mWb0FTjygtEJurEiL37XNyvVKr61GE6mqQLJ2nebCUPeEKIlBAlh6HaRM_C5Dc');">
+<!-- Abstract placeholder for illustration -->
+</div>
+<h3 class="text-xl font-extrabold text-text-main mb-2">Siap untuk hari ini?</h3>
+<p class="text-base font-medium text-muted px-4">Pastikan stok rak toko selalu update biar pelanggan makin senang belanja.</p>
+</div>
+<!-- Sticky Bottom CTA -->
+<div class="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto p-4 bg-gradient-to-t from-background-light via-background-light to-transparent pb-6 z-50">
+<button class="w-full h-[56px] bg-primary text-surface rounded-full flex items-center justify-center gap-2 shadow-soft text-lg font-extrabold active:scale-[0.98] transition-transform">
+<span class="text-2xl">📝</span> Mulai Opname
+            </button>
+</div>
+</div>
+</body></html>

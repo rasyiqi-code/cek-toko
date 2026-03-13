@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cek Toko - Product Entry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#f96b06",
+          "background-light": "#f8f7f5",
+          "background-dark": "#23170f",
+        },
+        fontFamily: {
+          "display": ["Spline Sans"]
+        },
+        borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  body {
+    font-family: 'Spline Sans', sans-serif;
+  }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex items-end sm:items-center justify-center relative overflow-hidden">
+<!-- Dimmed Backdrop -->
+<div class="absolute inset-0 bg-slate-900/40 z-10 transition-opacity"></div>
+<!-- Bottom Sheet -->
+<div class="relative z-20 w-full max-w-md bg-white rounded-t-[20px] sm:rounded-[20px] h-[85vh] sm:h-auto sm:max-h-[85vh] flex flex-col overflow-hidden shadow-[0_8px_16px_rgba(74,59,50,0.08)]">
+<!-- Drag Handle Area -->
+<div class="flex flex-col items-center pt-3 pb-2 w-full bg-white shrink-0 rounded-t-[20px]">
+<div class="h-1.5 w-12 rounded-full bg-slate-200"></div>
+<div class="w-full flex justify-between items-center px-4 pt-4">
+<button class="h-10 w-10 flex items-center justify-center text-slate-500 rounded-full hover:bg-slate-100 transition-colors">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+<h1 class="text-xl font-bold text-slate-900 tracking-tight">Tambah Barang</h1>
+<div class="w-10"></div> <!-- Spacer for center alignment -->
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+<!-- Nama Barang Input -->
+<label class="flex flex-col w-full group">
+<span class="text-slate-700 text-[15px] font-semibold mb-2 ml-1">Nama Barang</span>
+<input class="w-full h-[56px] px-4 rounded-[16px] bg-[#FDF9F1] border-2 border-transparent text-slate-900 text-[16px] font-medium placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-0 transition-colors" placeholder="Cth: Kopi Kapal Api" type="text"/>
+</label>
+<!-- Harga Jual Input -->
+<label class="flex flex-col w-full group">
+<span class="text-slate-700 text-[15px] font-semibold mb-2 ml-1">Harga Jual</span>
+<div class="relative flex items-center">
+<span class="absolute left-4 text-slate-500 font-medium">Rp</span>
+<input class="w-full h-[56px] pl-11 pr-4 rounded-[16px] bg-[#FDF9F1] border-2 border-transparent text-slate-900 text-[16px] font-medium placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-0 transition-colors" placeholder="0" type="number"/>
+</div>
+</label>
+<!-- Stok Awal Input -->
+<label class="flex flex-col w-full group">
+<span class="text-slate-700 text-[15px] font-semibold mb-2 ml-1">Stok Awal</span>
+<div class="flex items-center gap-3">
+<button class="h-[56px] w-[56px] shrink-0 rounded-[16px] bg-[#FDF9F1] text-primary flex items-center justify-center border-2 border-transparent active:bg-primary/10 transition-colors" type="button">
+<span class="material-symbols-outlined text-3xl">remove</span>
+</button>
+<input class="flex-1 h-[56px] px-4 rounded-[16px] bg-[#FDF9F1] border-2 border-transparent text-slate-900 text-center text-lg font-bold placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-0 transition-colors" min="0" type="number" value="1"/>
+<button class="h-[56px] w-[56px] shrink-0 rounded-[16px] bg-[#FDF9F1] text-primary flex items-center justify-center border-2 border-transparent active:bg-primary/10 transition-colors" type="button">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+</label>
+<!-- Optional Category Selector (Bonus UI based on context) -->
+<label class="flex flex-col w-full group">
+<span class="text-slate-700 text-[15px] font-semibold mb-2 ml-1">Kategori</span>
+<div class="relative">
+<select class="w-full h-[56px] px-4 pr-10 appearance-none rounded-[16px] bg-[#FDF9F1] border-2 border-transparent text-slate-900 text-[16px] font-medium focus:outline-none focus:border-primary focus:ring-0 transition-colors">
+<option disabled="" selected="" value="">Pilih Kategori...</option>
+<option value="minuman">Minuman</option>
+<option value="makanan">Makanan</option>
+<option value="rokok">Rokok</option>
+<option value="kebutuhan">Kebutuhan Harian</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+</div>
+</label>
+</div>
+<!-- Fixed Bottom Action -->
+<div class="p-4 bg-white border-t border-slate-100 shrink-0 pb-safe">
+<button class="w-full h-[56px] bg-primary text-white rounded-[16px] text-[16px] font-bold active:scale-[0.98] transition-transform flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-xl">save</span>
+        Simpan Barang
+      </button>
+</div>
+</div>
+</body></html>

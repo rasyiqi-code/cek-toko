@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cek Toko - Laporan Harian</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f96b06",
+                        "background-light": "#FDF9F1",
+                        "background-dark": "#23170f",
+                        "text-main": "#4A3B32",
+                        "text-muted": "#A89B92",
+                        "surface": "#FFFFFF",
+                        "accent-success": "#34C759"
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem", 
+                        "md": "0.75rem",
+                        "lg": "1.25rem", 
+                        "xl": "1.5rem", 
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft': '0 8px 16px rgba(74, 59, 50, 0.08)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Spline Sans', sans-serif;
+            color: #4A3B32;
+        }
+        
+        /* Count up animation simulation */
+        @keyframes countUp142 {
+            from { content: "0"; }
+            10% { content: "15"; }
+            20% { content: "29"; }
+            30% { content: "43"; }
+            40% { content: "57"; }
+            50% { content: "71"; }
+            60% { content: "85"; }
+            70% { content: "100"; }
+            80% { content: "114"; }
+            90% { content: "128"; }
+            to { content: "142"; }
+        }
+        
+        @keyframes countUp20 {
+            from { content: "0"; }
+            20% { content: "4"; }
+            40% { content: "8"; }
+            60% { content: "12"; }
+            80% { content: "16"; }
+            to { content: "20"; }
+        }
+
+        .animate-count-142::after {
+            content: "142";
+            animation: countUp142 1s ease-out forwards;
+        }
+        
+        .animate-count-20::after {
+            content: "20";
+            animation: countUp20 1s ease-out forwards;
+        }
+        
+        /* Celebration pop */
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            60% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .animate-pop {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col items-center justify-center font-display pb-24">
+<div class="w-full max-w-md mx-auto relative flex flex-col min-h-screen px-4 pt-8">
+<!-- Header / Nav -->
+<div class="flex items-center justify-between mb-6">
+<button class="flex size-12 shrink-0 items-center justify-center rounded-full bg-surface shadow-soft text-text-main hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight text-center flex-1 pr-12">Laporan Harian</h1>
+</div>
+<!-- Hero Section -->
+<div class="flex flex-col items-center justify-center mt-4 mb-8 animate-pop">
+<!-- Illustration Placeholder -->
+<div class="w-48 h-48 mb-6 relative flex items-center justify-center bg-white rounded-full shadow-soft">
+<div class="absolute inset-0 bg-primary/20 rounded-full animate-pulse"></div>
+<span class="material-symbols-outlined text-8xl text-primary relative z-10">emoji_events</span>
+<!-- Sparkles -->
+<span class="material-symbols-outlined absolute top-4 right-4 text-3xl text-accent-success">colors_spark</span>
+<span class="material-symbols-outlined absolute bottom-8 left-4 text-2xl text-primary">auto_awesome</span>
+</div>
+<h2 class="text-3xl font-extrabold text-center leading-tight mb-2 text-text-main">
+                Mantap! <br/>Toko Aman Hari Ini
+            </h2>
+<p class="text-text-muted font-medium text-center text-lg">
+                Kerja bagus juragan! Ini rekap hari ini.
+            </p>
+</div>
+<!-- Summary Box -->
+<div class="bg-surface rounded-xl shadow-soft p-6 mb-8 transform transition-transform hover:scale-[1.02]">
+<div class="flex justify-between items-center mb-6 border-b-2 border-background-light pb-4">
+<div class="flex items-center gap-3">
+<div class="bg-primary/10 p-3 rounded-xl">
+<span class="material-symbols-outlined text-primary text-2xl">shopping_cart_checkout</span>
+</div>
+<div>
+<p class="text-sm font-bold text-text-muted uppercase tracking-wider">Barang Terjual</p>
+<p class="text-3xl font-extrabold text-text-main flex items-baseline gap-1">
+<span class="animate-count-142"></span>
+<span class="text-sm font-medium text-text-muted">item</span>
+</p>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="bg-accent-success/10 p-3 rounded-xl">
+<span class="material-symbols-outlined text-accent-success text-2xl">inventory_2</span>
+</div>
+<div>
+<p class="text-sm font-bold text-text-muted uppercase tracking-wider">Stok Masuk</p>
+<p class="text-3xl font-extrabold text-text-main flex items-baseline gap-1">
+<span class="animate-count-20"></span>
+<span class="text-sm font-medium text-text-muted">item</span>
+</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Breakdown List -->
+<div class="mb-8">
+<h3 class="text-lg font-bold text-text-main mb-4 px-2">Pergerakan Terbanyak</h3>
+<div class="bg-surface rounded-xl shadow-soft overflow-hidden">
+<!-- Item 1 -->
+<div class="flex items-center justify-between p-4 border-b-2 border-background-light">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-background-light rounded-lg flex items-center justify-center text-2xl">
+                            🍜
+                        </div>
+<div>
+<p class="font-bold text-text-main text-lg">Indomie Goreng</p>
+<p class="text-sm text-text-muted font-medium">Sisa stok: 48</p>
+</div>
+</div>
+<div class="bg-primary/10 text-primary font-bold px-3 py-1 rounded-full text-lg">
+                        -12
+                    </div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between p-4 border-b-2 border-background-light">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-background-light rounded-lg flex items-center justify-center text-2xl">
+                            ☕
+                        </div>
+<div>
+<p class="font-bold text-text-main text-lg">Kopi Kapal Api</p>
+<p class="text-sm text-text-muted font-medium">Sisa stok: 24</p>
+</div>
+</div>
+<div class="bg-primary/10 text-primary font-bold px-3 py-1 rounded-full text-lg">
+                        -8
+                    </div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-background-light rounded-lg flex items-center justify-center text-2xl">
+                            🚬
+                        </div>
+<div>
+<p class="font-bold text-text-main text-lg">Rokok Surya 16</p>
+<p class="text-sm text-text-muted font-medium">Sisa stok: 15</p>
+</div>
+</div>
+<div class="bg-accent-success/10 text-accent-success font-bold px-3 py-1 rounded-full text-lg flex items-center">
+                        +5
+                    </div>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Action -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background-light via-background-light to-transparent z-20 flex justify-center pb-8">
+<div class="w-full max-w-md">
+<button class="w-full h-14 bg-background-light text-primary border-2 border-primary rounded-full font-extrabold text-lg shadow-soft flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition-all active:scale-95">
+<span class="material-symbols-outlined font-bold">check_circle</span>
+                    Selesai
+                </button>
+</div>
+</div>
+</div>
+</body></html>

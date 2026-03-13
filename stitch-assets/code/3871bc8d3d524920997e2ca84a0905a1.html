@@ -1,0 +1,226 @@
+# Friendly & Accessible
+
+## Product Overview
+
+**The Pitch:** Cek Toko is an offline-first inventory management tool that replaces messy Excel sheets with a delightful, chunk-based UI. It turns daily stock tracking and master data management into a simple, encouraging routine.
+
+**For:** Warung Madura owners who find traditional digital inventory intimidating, needing an accessible, fat-finger-friendly way to track their daily goods.
+
+**Device:** mobile
+
+**Design Direction:** A highly welcoming aesthetic utilizing soft rounded corners (`20px`), warm cream backgrounds, vibrant orange accents, and oversized (`56px`) touch targets to eliminate digital anxiety.
+
+**Inspired by:** Duolingo (approachable, chunky UI, encouraging), GoBiz (localized merchant context, clear utility)
+
+---
+
+## Screens
+
+- **Dashboard:** At-a-glance shop health and quick actions
+- **Product Roster:** Searchable, visual list of all shop items
+- **Product Entry:** Frictionless form to add or edit master data
+- **Stock Opname:** Guided, step-by-step stock counting flow
+- **Daily Reports:** Encouraging summary of the day's stock movements
+
+---
+
+## Key Flows
+
+**Daily Stock Opname:** User counts physical stock and updates the system.
+
+1. User is on Dashboard -> sees vibrant "Mulai Hitung Stok" (Start Counting) button
+2. User clicks "Mulai Hitung Stok" -> opens Stock Opname screen with the first category (e.g., Rokok/Cigarettes)
+3. User taps large `+` / `-` buttons to adjust physical count, taps "Lanjut" (Next)
+4. System displays a cheerful success modal, updates master stock
+
+---
+
+<details>
+<summary>Design System</summary>
+
+## Color Palette
+
+- **Primary:** `#FF6B00` - Main CTA buttons, active states, floating action buttons
+- **Background:** `#FDF9F1` - Page background (warm cream)
+- **Surface:** `#FFFFFF` - Cards, bottom sheets, inputs
+- **Text:** `#4A3B32` - Headings and primary body text (deep warm brown)
+- **Muted:** `#A89B92` - Placeholders, secondary text, soft borders
+- **Accent:** `#34C759` - Success states, positive stock changes
+
+## Typography
+
+Choose fonts that are **distinctive and characterful**, specifically utilizing rounded, highly legible typefaces to reinforce the friendly vibe.
+
+- **Headings:** Nunito, 800, 24-32px
+- **Body:** Quicksand, 600, 16px
+- **Small text:** Quicksand, 500, 14px
+- **Buttons:** Nunito, 800, 16px
+
+**Style notes:** Over-exaggerated border radii (`20px` to `24px`), soft dropped shadows (`0 8px 16px rgba(74, 59, 50, 0.08)`), inputs with thick `2px` borders. No sharp edges anywhere. Touch targets minimum `56px` high.
+
+## Design Tokens
+
+```css
+:root {
+  --color-primary: #FF6B00;
+  --color-background: #FDF9F1;
+  --color-surface: #FFFFFF;
+  --color-text: #4A3B32;
+  --color-muted: #A89B92;
+  --color-accent: #34C759;
+  --font-heading: 'Nunito', sans-serif;
+  --font-body: 'Quicksand', sans-serif;
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  --spacing: 16px;
+  --shadow-soft: 0 8px 16px rgba(74, 59, 50, 0.08);
+}
+```
+
+</details>
+
+---
+
+<details>
+<summary>Screen Specifications</summary>
+
+### Dashboard
+
+**Purpose:** Welcoming hub providing a quick status check and prominent entry points.
+
+**Layout:** Top greeting with shop name, middle 2x2 grid of quick stats, bottom sticky prominent CTA.
+
+**Key Elements:**
+- **Greeting:** `28px` Nunito, `#4A3B32`, "Halo, Juragan!"
+- **Stat Cards:** `FFFFFF` surface, `20px` radius, `0 8px 16px rgba(74, 59, 50, 0.08)` shadow. Contains soft icon + "Stok Menipis: 5 Barag".
+- **Main CTA:** Fixed bottom, `calc(100% - 32px)` width, `56px` height, `#FF6B00` background, `9999px` radius, "📝 Mulai Opname".
+
+**States:**
+- **Empty:** No low stock items? Display a cheerful illustration of a fully stocked shelf.
+- **Loading:** Pulsing warm grey (`#E8DFD5`) rounded rectangles.
+- **Error:** Offline indicator badge (top right), "Mode Offline Aktif".
+
+**Components:**
+- **Stat Card:** `160px x 120px`, `#FFFFFF`, `20px` radius, chunky icon top-left.
+
+**Interactions:**
+- **Click CTA:** Bottom-up spring animation into Stock Opname.
+- **Click Stat Card:** Slight scale down (`0.95`), push to Product Roster filtered by state.
+
+**Responsive:**
+- **Mobile:** Single column greeting, 2-column stat grid.
+
+### Product Roster
+
+**Purpose:** Visual directory of all master data items.
+
+**Layout:** Sticky search bar top, scrollable vertical list of fat product cards, FAB bottom right.
+
+**Key Elements:**
+- **Search Bar:** `56px` height, `24px` radius, `#FFFFFF`, `2px` border `#A89B92`, search icon left.
+- **Product Card:** `88px` height, `20px` radius, `16px` padding, flex-row. Left: chunky placeholder image (`64x64`, `#FDF9F1`, `12px` radius). Right: "Indomie Goreng", "Sisa: 24".
+- **FAB:** `64x64`, `#FF6B00`, `+` icon in `#FFFFFF`, `9999px` radius, bottom right `24px` inset.
+
+**States:**
+- **Empty:** Centered empty box illustration, "Belum ada barang, yuk tambah!".
+
+**Components:**
+- **Product Card:** `100% width`, `#FFFFFF`, `20px` radius, `2px` border transparent (turns `#FF6B00` on active).
+
+**Interactions:**
+- **Click FAB:** Rotate `+` 90deg, slide up Product Entry sheet.
+- **Scroll:** Search bar gains `#FFFFFF` background and soft shadow.
+
+**Responsive:**
+- **Mobile:** Full width list.
+
+### Product Entry
+
+**Purpose:** Frictionless addition of a new stock keeping unit.
+
+**Layout:** Bottom sheet taking up 85% of viewport. Title, 3 input fields, bottom save button.
+
+**Key Elements:**
+- **Header:** "Tambah Barang", `24px` Nunito, center aligned.
+- **Inputs:** Nama Barang, Harga Jual, Stok Awal. `56px` height, `#FDF9F1` background, no border, `16px` radius. Focus state: `2px` border `#FF6B00`.
+- **Save Button:** `56px` height, `#FF6B00`, "Simpan Barang".
+
+**States:**
+- **Empty:** Inputs blank with playful placeholders ("Cth: Kopi Kapal Api").
+- **Error:** Input border turns red, shake animation on submit.
+
+**Components:**
+- **Fat Input:** `100% width`, `#FDF9F1`, `16px` radius, `16px` font size Quicksand.
+
+**Interactions:**
+- **Click Save:** Confetti burst from button, sheet slides down.
+
+**Responsive:**
+- **Mobile:** Bottom sheet design.
+
+### Stock Opname
+
+**Purpose:** Gamified, step-by-step physical count of inventory.
+
+**Layout:** Top progress bar, center focused product card, bottom giant +/- counter and "Lanjut" button.
+
+**Key Elements:**
+- **Progress Bar:** `8px` height, `#E8DFD5` track, `#34C759` fill, `9999px` radius.
+- **Focus Card:** Large central card (`280px` height), product image, "Berapa sisa Gudang Garam Filter?".
+- **Stepper:** Massive `72px` circular buttons for `-` and `+`. Center text `32px` Nunito for current count.
+
+**States:**
+- **Loading:** Smooth transition between products.
+
+**Components:**
+- **Counter Group:** Flex-row, center aligned, spacing `24px`.
+
+**Interactions:**
+- **Click + / -:** Haptic feedback (vibration), counter number bounces slightly.
+- **Click Lanjut:** Card slides left, new card slides in from right.
+
+**Responsive:**
+- **Mobile:** Locked vertical scroll, focuses purely on the center counter.
+
+### Daily Reports
+
+**Purpose:** End-of-day summary that feels like an achievement screen.
+
+**Layout:** Centered trophy/success illustration, large summary numbers, breakdown list below.
+
+**Key Elements:**
+- **Hero:** "Mantap! Toko Aman Hari Ini", `28px` Nunito, centered.
+- **Summary Box:** `FFFFFF`, `20px` radius, "Barang Terjual: 142", "Stok Masuk: 20".
+- **Done Button:** `56px` height, `#FDF9F1` background, `#FF6B00` text, `2px` border `#FF6B00`.
+
+**States:**
+- **Empty:** N/A (generated post-opname).
+
+**Components:**
+- **Summary Row:** Flex space-between, `16px` padding, bottom border `1px` `#E8DFD5`.
+
+**Interactions:**
+- **Page Load:** Count-up animation for summary numbers (0 to 142 in 1s).
+
+**Responsive:**
+- **Mobile:** Standard scrolling page.
+
+</details>
+
+---
+
+<details>
+<summary>Build Guide</summary>
+
+**Stack:** HTML + Tailwind CSS v3
+
+**Build Order:**
+1. **Dashboard** - Establishes the core container, warm background, and card style.
+2. **Product Roster** - Implements the list view and distinctive chunky UI elements.
+3. **Product Entry** - Builds the fat-finger input fields and bottom sheet mechanics.
+4. **Stock Opname** - Introduces the interactive counter and progress systems.
+5. **Daily Reports** - Reuses components for a final polished summary view.
+
+</details>

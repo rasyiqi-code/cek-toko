@@ -1,0 +1,230 @@
+# Friendly & Accessible
+
+## Product Overview
+
+**The Pitch:** Cek Toko is a deeply intuitive, offline-first mobile application designed to replace cumbersome Excel spreadsheets for Warung Madura owners. It streamlines master data management, daily stock tracking, and automated stock opname calculations in a highly accessible interface.
+
+**For:** Warung Madura owners and staff who rely on manual logs or complex spreadsheets, needing an error-free, tap-friendly tool to manage their daily inventory.
+
+**Device:** mobile
+
+**Design Direction:** A welcoming, approachable aesthetic utilizing soft rounded corners, warm earthy tones, vibrant orange accents, and oversized touch targets to completely remove the intimidation factor of digital inventory.
+
+**Inspired by:** Duolingo (for approachable, chunky UI), GoBiz (for localized merchant context).
+
+---
+
+## Screens
+
+- **Dashboard:** High-level summary of low stock alerts and quick actions
+- **Product Roster:** Filterable, card-based master data list categorized by ROKOK, KOSMETIK, etc.
+- **Product Entry:** Simplified form to add or edit master stock items
+- **Stock Opname:** Guided workflow to input physical counts, auto-calculating variances
+- **Daily Reports:** Easy-to-read financial summary of current stock value
+
+---
+
+## Key Flows
+
+**Daily Stock Opname:** Reconciling physical stock with system records
+
+1. User is on Dashboard -> sees **Cek Stok Fisik** prominent CTA
+2. User clicks CTA -> navigates to **Stock Opname** screen categorized by product type
+3. User inputs actual count via large +/- stepper buttons -> app auto-calculates difference and value lost/gained
+4. User clicks **Simpan Laporan** -> records updated offline, success modal appears
+
+**Adding a New Cigarette Brand:** Managing master data
+
+1. User is on Product Roster -> clicks floating **+ Tambah Barang** button
+2. User fills out Product Entry form -> selects category `ROKOK`, inputs price and initial stock
+3. User clicks **Simpan** -> returns to Product Roster with new item highlighted in green
+
+---
+
+<details>
+<summary>Design System</summary>
+
+## Color Palette
+
+- **Primary:** `#FF7A00` - Main buttons, active tabs, floating action buttons
+- **Background:** `#FFF8F3` - Warm, comfortable page background
+- **Surface:** `#FFFFFF` - Item cards, bottom sheets, input fields
+- **Text:** `#3E2723` - Primary headings and body text (warm espresso brown)
+- **Muted:** `#A68A80` - Helper text, inactive icons, borders
+- **Accent:** `#2ECA6A` - Success states, positive stock variances, profit metrics
+- **Warning:** `#FF4B4B` - Low stock alerts, negative stock variances
+
+## Typography
+
+Choose fonts that are **distinctive and characterful**, bringing warmth to utility.
+
+- **Headings:** `Quicksand`, 700, 24-32px
+- **Body:** `Nunito`, 600, 16px
+- **Small text:** `Nunito`, 500, 14px
+- **Buttons:** `Quicksand`, 700, 16px
+
+**Style notes:** Chunky `16px` border radii on all cards. Generous `16px` internal padding minimum. Tap targets are strictly `48px` or larger. Drop shadows are soft and tinted orange (`0 8px 24px rgba(255,122,0,0.08)`). Input fields use thick `2px` borders when focused.
+
+## Design Tokens
+
+```css
+:root {
+  --color-primary: #FF7A00;
+  --color-background: #FFF8F3;
+  --color-surface: #FFFFFF;
+  --color-text: #3E2723;
+  --color-muted: #A68A80;
+  --color-accent: #2ECA6A;
+  --color-warning: #FF4B4B;
+  --font-heading: 'Quicksand', sans-serif;
+  --font-body: 'Nunito', sans-serif;
+  --radius-card: 16px;
+  --radius-button: 24px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+}
+```
+
+</details>
+
+---
+
+<details>
+<summary>Screen Specifications</summary>
+
+### Dashboard
+
+**Purpose:** Daily command center highlighting urgent tasks (low stock) and entry points for routine actions.
+
+**Layout:** Top greeting with shop name, prominent alert cards in the upper-middle, dual primary action buttons, bottom navigation.
+
+**Key Elements:**
+- **Greeting Header:** `24px` Quicksand, `#3E2723`, "Buka warung, rezeki mengalir!"
+- **Low Stock Alert Card:** `#FF4B4B` border, lists top 3 items nearly out of stock (e.g., "Sampoerna Mild - Sisa 2").
+- **Quick Action Grid:** Two large `120px` tall cards side-by-side (`Cek Fisik` and `Tambah Barang`), `#FFFFFF` surface, prominent `#FF7A00` icons.
+- **Bottom Navigation:** 4 icons (Home, Barang, Laporan, Pengaturan), active state highlighted with `#FF7A00` pill background.
+
+**States:**
+- **Empty:** "Semua stok aman bosku!" illustration when no alerts.
+- **Loading:** Skeleton pulses using `#F5EBE6` background.
+- **Error:** Offline banner at the top if sync fails, but operations remain fully functional.
+
+**Components:**
+- **Alert Card:** `width: 100%`, `padding: 16px`, `border-radius: 16px`, `box-shadow: 0 4px 12px rgba(255,75,75,0.1)`.
+
+**Interactions:**
+- **Click Quick Action:** Scale down to `0.95` on press, snap back, slide to selected screen.
+
+### Product Roster
+
+**Purpose:** Master inventory list, highly searchable and neatly categorized.
+
+**Layout:** Sticky search and category filter pills at the top, vertical scrolling list of product cards.
+
+**Key Elements:**
+- **Search Bar:** Large `56px` height, thick `#FFF8F3` background, `#3E2723` placeholder text "Cari barang...".
+- **Category Pills:** Horizontally scrollable row (Semua, ROKOK, KOSMETIK, SEMBAKO, MINUMAN). Active pill `#FF7A00` background, `#FFFFFF` text.
+- **Product Card:** Displays Item Name, SKU, Current Stock (`24px` bold), and Sell Price.
+- **Floating Action Button:** Fixed bottom right, `64px` circle, `#FF7A00` with `+` icon, heavy shadow.
+
+**States:**
+- **Empty:** "Belum ada barang di kategori ini." with a friendly empty box illustration.
+- **Loading:** Shimmering cards.
+- **Error:** "Gagal memuat barang." with a retry button.
+
+**Components:**
+- **Product Card:** `border-radius: 16px`, `background: #FFFFFF`, right-aligned stock badge with `#F5EBE6` background and `#3E2723` text.
+
+**Interactions:**
+- **Tap Category Pill:** Instantly filters list without network request (offline-first).
+- **Click Card:** Opens bottom sheet with quick edit options.
+
+### Product Entry
+
+**Purpose:** Frictionless data entry form to add or modify items without feeling like a spreadsheet.
+
+**Layout:** Header with back button, single-column vertical form with oversized input fields, sticky bottom submit button.
+
+**Key Elements:**
+- **Input Fields:** `56px` tall, `#F5EBE6` background, no borders until focused (`2px solid #FF7A00`).
+- **Category Selector:** Large tap targets in a 2-column grid instead of a hidden dropdown.
+- **Initial Stock Stepper:** `-` and `+` buttons flanking a large numeric input.
+- **Save Button:** Sticky at bottom, `width: 100%`, `height: 56px`, `#FF7A00`, rounded `28px`.
+
+**States:**
+- **Empty:** Fields blank, Save button disabled (`#E0D5CF` background, `#A68A80` text).
+- **Loading:** Save button shows loading spinner.
+- **Error:** Inline red text `#FF4B4B` beneath invalid fields (e.g., "Harga harus diisi").
+
+**Components:**
+- **Stepper:** `48x48px` buttons, `#FDF8F5` surface, `#FF7A00` icon.
+
+**Interactions:**
+- **Focus Input:** Field background changes to `#FFFFFF`, thick orange border appears.
+- **Tap + Stepper:** Haptic feedback, number increments instantly.
+
+### Stock Opname
+
+**Purpose:** The killer feature: reconciling physical counts against system counts effortlessly.
+
+**Layout:** Progress header, product card displaying system count vs actual count input, sticky "Lanjut" button.
+
+**Key Elements:**
+- **Progress Bar:** `#F5EBE6` track, `#FF7A00` fill at the top edge.
+- **Comparison Card:** Shows "Sistem: 12" and "Fisik: [ Input ]".
+- **Difference Calculator:** Real-time badge showing variance (e.g., `-2 (Rp 40.000)` in `#FF4B4B`).
+- **Numpad:** Custom in-app large numpad to prevent triggering native device keyboards and covering UI.
+
+**States:**
+- **Empty:** N/A (always opens with products).
+- **Loading:** Calculating totals.
+- **Error:** N/A.
+
+**Components:**
+- **Variance Badge:** `padding: 8px 12px`, `border-radius: 8px`, dynamic color (`#2ECA6A` for 0/positive, `#FF4B4B` for negative).
+
+**Interactions:**
+- **Type on Custom Numpad:** Variance badge updates immediately with every keystroke.
+- **Swipe Card:** Swipe left to skip item, swipe right to mark as "Sesuai" (Matches system).
+
+### Daily Reports
+
+**Purpose:** Provide peace of mind by showing the shop's value and recent discrepancies.
+
+**Layout:** Top summary card with total asset value, segmented control for tabs (Nilai Stok, Riwayat Opname).
+
+**Key Elements:**
+- **Asset Value Card:** Massive `32px` text for total Rupiah value, `#FFFFFF` text on `#FF7A00` background.
+- **Opname History List:** Items showing date, time, and total variance value.
+- **Category Breakdown:** Simple horizontal bar charts showing capital locked in ROKOK vs KOSMETIK.
+
+**States:**
+- **Empty:** "Belum ada laporan opname bulan ini."
+- **Loading:** Shimmering chart blocks.
+- **Error:** N/A.
+
+**Components:**
+- **Bar Chart Row:** `height: 24px`, `border-radius: 12px`, left-aligned label, right-aligned value.
+
+**Interactions:**
+- **Tap Tab:** Smooth crossfade between Report views.
+
+</details>
+
+---
+
+<details>
+<summary>Build Guide</summary>
+
+**Stack:** HTML + Tailwind CSS v3 (Capacitor wrapper targeting Android)
+
+**Build Order:**
+1. **Design System & Base Components:** Establish the thick `16px` border radii, the custom font stack (`Quicksand` & `Nunito`), and the exact orange/warm-white color variables.
+2. **Product Roster:** Build the master list first. It dictates how the core data model is rendered and requires implementing the sticky headers and scrolling logic.
+3. **Product Entry:** Hook up the form to populate the Product Roster. Ensure oversized inputs and custom steppers work perfectly.
+4. **Stock Opname:** Implement the complex auto-calculating variance logic and the custom in-app numpad. This is the app's most critical workflow.
+5. **Dashboard & Daily Reports:** Build the aggregation layers last once data entry and inventory manipulation are rock solid.
+
+</details>

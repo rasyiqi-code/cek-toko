@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Store {
+  id            String    @id @default(cuid())
+  name          String
+  licenseKey    String?   // Encrypted/Hashed license key
+  isValid       Boolean   @default(false)
+  validUntil    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  users         User[]
+  categories    Category[]
+  products      Product[]
+  guardianDuties GuardianDuty[]
+  profile       StoreProfile[]
+}
+
+model User {
+  id       String @id @default(cuid())
+  storeId  String
+  name     String @default("")
+  username String
+  password String
+  role     String @default("PENJAGA")
+
+  store    Store  @relation(fields: [storeId], references: [id])
+
+  @@unique([username, storeId])
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  storeId   String
+  name      String
+  createdAt DateTime  @default(now())
+
+  store     Store     @relation(fields: [storeId], references: [id])
+  products  Product[]
+
+  @@unique([name, storeId])
+}
+
+model Product {
+  id         String        @id @default(cuid())
+  storeId    String
+  name       String
+  categoryId String
+  price      Decimal       @db.Decimal(10, 2)
+  buyPrice   Decimal       @default(0) @db.Decimal(10, 2)
+  unit       String        @default("pcs")
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  store      Store         @relation(fields: [storeId], references: [id])
+  category   Category      @relation(fields: [categoryId], references: [id])
+  stock      Stock?
+  opnames    StockOpname[]
+}
+
+model Stock {
+  id        String   @id @default(cuid())
+  productId String   @unique
+  quantity  Int      @default(0)
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+model StockOpname {
+  id           String   @id @default(cuid())
+  productId    String
+  checkerName  String   @default("")
+  guardianName String   @default("")
+  stockOld     Int
+  stockNew     Int
+  difference   Int
+  value        Decimal  @db.Decimal(10, 2)
+  date         DateTime @default(now())
+  createdAt    DateTime @default(now())
+  product      Product  @relation(fields: [productId], references: [id])
+}
+
+model GuardianDuty {
+  id        String    @id @default(cuid())
+  storeId   String
+  userId    String
+  userName  String
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+  active    Boolean   @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  store     Store     @relation(fields: [storeId], references: [id])
+}
+
+model SyncLog {
+  id       String   @id @default(cuid())
+  deviceId String
+  syncTime DateTime @default(now())
+  status   String
+}
+
+model StoreProfile {
+  id        String   @id @default(cuid())
+  storeId   String   @unique
+  storeName String   @default("CekToko")
+  updatedAt DateTime @updatedAt
+
+  store     Store    @relation(fields: [storeId], references: [id])
+
+  @@map("StoreProfile")
+}
