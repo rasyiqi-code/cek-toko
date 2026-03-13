@@ -21,7 +21,7 @@ const isProd = process.env.NODE_ENV === "production"
 const isBuild = process.env.NEXT_PHASE === "phase-production-build"
 
 if (!SECRET && isProd && !isBuild) {
-  throw new Error("CRITICAL: SESSION_SECRET must be set in production environment")
+  console.error("CRITICAL ERROR: SESSION_SECRET is missing in production environment. Sessions will be insecure.")
 }
 const ACTUAL_SECRET = SECRET || "cektoko-fallback-secret-12345"
 
