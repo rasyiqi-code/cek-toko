@@ -8,7 +8,7 @@ export function proxy(request: NextRequest) {
   const { pathname } = url
 
   // 1. Allowed public routes
-  const publicRoutes = ["/login", "/register-store"]
+  const publicRoutes = ["/", "/login", "/register-store"]
   
   if (!token) {
     if (publicRoutes.includes(pathname) || pathname.startsWith("/_next") || pathname.startsWith("/api") || pathname === "/favicon.ico") {
