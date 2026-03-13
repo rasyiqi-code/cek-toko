@@ -4,8 +4,8 @@
   "description": "Hitung barang warung Madura",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#FDF9F1",
+  "theme_color": "#f96b06",
   "icons": [
     {
       "src": "/icon-192.png",

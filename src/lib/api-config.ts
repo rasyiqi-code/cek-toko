@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  // Update this to your production URL
+  // Production URL: https://cek-toko.vercel.app
   BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'https://cek-toko.vercel.app',
   IS_NATIVE: typeof window !== 'undefined' && 
     (window.location.protocol === 'capacitor:' || window.location.protocol === 'tauri:'),

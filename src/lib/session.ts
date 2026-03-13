@@ -16,11 +16,15 @@ export type SessionUser = {
 
 import { createHmac, timingSafeEqual } from "crypto"
 
-const SECRET = process.env.SESSION_SECRET || "cektoko-fallback-secret-12345"
+const SECRET = process.env.SESSION_SECRET
+if (!SECRET && process.env.NODE_ENV === "production") {
+  throw new Error("CRITICAL: SESSION_SECRET must be set in production environment")
+}
+const ACTUAL_SECRET = SECRET || "cektoko-fallback-secret-12345"
 
 export function encodeSession(user: SessionUser): string {
   const payload = Buffer.from(JSON.stringify(user)).toString("base64")
-  const signature = createHmac("sha256", SECRET).update(payload).digest("base64")
+  const signature = createHmac("sha256", ACTUAL_SECRET).update(payload).digest("base64")
   return `${payload}.${signature}`
 }
 
@@ -30,7 +34,7 @@ export function decodeSession(token: string): SessionUser | null {
     if (!payload || !signature) return null
 
     // Verify signature
-    const expectedSignature = createHmac("sha256", SECRET).update(payload).digest("base64")
+    const expectedSignature = createHmac("sha256", ACTUAL_SECRET).update(payload).digest("base64")
     
     // Use timingSafeEqual to prevent timing attacks
     const isValid = timingSafeEqual(
