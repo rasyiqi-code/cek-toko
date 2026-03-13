@@ -18,7 +18,7 @@ export async function getCategoryReports() {
     }
   })
 
-  return categories.map((cat) => {
+  return categories.map((cat: (typeof categories)[0]) => {
     const totalItems = cat.products.length
     const totalStock = cat.products.reduce((acc: number, p: (typeof cat.products)[0]) => acc + (p.stock?.quantity || 0), 0)
     
@@ -48,7 +48,7 @@ export async function getStockDetails() {
     },
     orderBy: { name: "asc" }
   })
-  return products.map(p => ({
+  return products.map((p: (typeof products)[0]) => ({
     ...p,
     price: Number(p.price),
     buyPrice: Number(p.buyPrice),

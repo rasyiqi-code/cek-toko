@@ -21,7 +21,7 @@ export async function getStockOpnames() {
     take: 50
   })
 
-  return opnames.map(op => ({
+  return opnames.map((op: (typeof opnames)[0]) => ({
     ...op,
     value: Number(op.value),
     product: op.product ? {
