@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { registerStore } from "@/lib/actions/auth"
+import { saveToken } from "@/lib/auth-client"
 import { Loader2 } from "lucide-react"
 
 export default function RegisterStorePage() {
@@ -23,8 +24,10 @@ export default function RegisterStorePage() {
 
     const res = await registerStore({ storeName, adminName, username, password })
     if (res.success) {
+      if (res.token) await saveToken(res.token)
       localStorage.setItem("cek_toko_is_registered", "true")
-      router.push("/login?registered=true")
+      router.push("/dashboard")
+      router.refresh()
     } else {
       setError(res.error || "Gagal mendaftar")
       setLoading(false)

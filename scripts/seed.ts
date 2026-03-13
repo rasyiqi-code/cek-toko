@@ -131,22 +131,54 @@ const productsData: Record<string, { name: string; price: number; buyPrice: numb
 async function seed() {
   console.log("🌱 Seeding database...\n")
 
-  // Create Owner account
+  // 1. Create Default Store
+  const store = await prisma.store.upsert({
+    where: { id: "default-store" },
+    update: {},
+    create: {
+      id: "default-store",
+      name: "Toko Utama",
+      isValid: true,
+      validUntil: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), // 1 year
+    },
+  })
+  console.log(`✅ Store: ${store.name} (${store.id})`)
+
+  // 2. Create Owner account
   const bcrypt = require("bcryptjs")
   const hashedPassword = await bcrypt.hash("adminpassword", 10)
   const owner = await prisma.user.upsert({
-    where: { username: "admin" },
+    where: { 
+      username_storeId: {
+        username: "admin",
+        storeId: store.id
+      }
+    },
     update: { name: "Pemilik Toko", password: hashedPassword, role: "OWNER" },
-    create: { name: "Pemilik Toko", username: "admin", password: hashedPassword, role: "OWNER" },
+    create: { 
+      name: "Pemilik Toko", 
+      username: "admin", 
+      password: hashedPassword, 
+      role: "OWNER",
+      storeId: store.id
+    },
   })
   console.log(`✅ Owner: ${owner.username} (password: adminpassword)`)
 
   // Seed categories and products
   for (const [categoryName, products] of Object.entries(productsData)) {
     const category = await prisma.category.upsert({
-      where: { name: categoryName },
+      where: { 
+        name_storeId: {
+          name: categoryName,
+          storeId: store.id
+        }
+      },
       update: {},
-      create: { name: categoryName },
+      create: { 
+        name: categoryName,
+        storeId: store.id
+      },
     })
     console.log(`\n📁 Kategori: ${categoryName}`)
 
@@ -155,6 +187,7 @@ async function seed() {
         data: {
           name: p.name,
           categoryId: category.id,
+          storeId: store.id,
           price: p.price,
           buyPrice: p.buyPrice,
           unit: p.unit,

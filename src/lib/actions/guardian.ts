@@ -2,16 +2,27 @@
 
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { getCurrentUser } from "./auth"
 
 export async function getActiveGuardianDuty() {
+  const user = await getCurrentUser()
+  if (!user) return null
+
   return await prisma.guardianDuty.findFirst({
-    where: { active: true },
+    where: { 
+      active: true,
+      storeId: user.storeId
+    },
     orderBy: { startDate: "desc" }
   })
 }
 
 export async function getGuardianDuties() {
+  const user = await getCurrentUser()
+  if (!user) return []
+
   return await prisma.guardianDuty.findMany({
+    where: { storeId: user.storeId },
     orderBy: { startDate: "desc" },
     take: 50
   })
@@ -19,9 +30,15 @@ export async function getGuardianDuties() {
 
 export async function setGuardianDuty(userId: string, userName: string) {
   try {
-    // 1. Deactivate current active duty
+    const user = await getCurrentUser()
+    if (!user) return { success: false, error: "Unauthorized" }
+
+    // 1. Deactivate current active duty for this store
     await prisma.guardianDuty.updateMany({
-      where: { active: true },
+      where: { 
+        active: true,
+        storeId: user.storeId
+      },
       data: { 
         active: false,
         endDate: new Date()
@@ -33,6 +50,7 @@ export async function setGuardianDuty(userId: string, userName: string) {
       data: {
         userId,
         userName,
+        storeId: user.storeId,
         startDate: new Date(),
         active: true
       }

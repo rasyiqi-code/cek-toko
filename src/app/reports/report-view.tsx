@@ -56,7 +56,7 @@ interface StockOpname {
   product: {
     name: string
     category: { name: string }
-  }
+  } | null
 }
 
 export function ReportView({
@@ -170,7 +170,7 @@ export function ReportView({
                   </div>
 
                   <div>
-                    <p className="text-sm font-bold text-text-main">{opname.product.name}</p>
+                    <p className="text-sm font-bold text-text-main">{opname.product?.name || "Barang Terhapus"}</p>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 bg-background-light/50 p-2.5 rounded-xl border border-muted/5">

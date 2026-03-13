@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Minus, Plus, ArrowRight, HelpCircle, User } from "lucide-react"
+import { useSync } from "@/lib/hooks/use-sync"
 import { Input } from "@/components/ui/input"
 import { createStockOpname } from "@/lib/actions/stock"
 import { cn } from "@/lib/utils"
@@ -57,9 +58,19 @@ export function StockOpnameForm({ products, categories, users }: { products: Pro
   const currentNew = currentProduct ? opnameData[currentProduct.id] ?? "" : ""
   const progressWidth = filteredProducts.length === 0 ? 0 : Math.max(((safePosition + 1) / filteredProducts.length) * 100, 6)
 
+  const { addToQueue, isOffline } = useSync()
+
   const handleSave = async () => {
     if (!currentProduct || currentNew === "") return
     setLoading(true)
+
+    if (isOffline) {
+      await addToQueue("CREATE_STOCK_OPNAME", { productId: currentProduct.id, stockNew: parseInt(currentNew), guardianName })
+      if (safePosition < filteredProducts.length - 1) setCurrentPosition(safePosition + 1)
+      setLoading(false)
+      return
+    }
+
     const res = await createStockOpname({ productId: currentProduct.id, stockNew: parseInt(currentNew), guardianName })
     if (res.success) {
       if (safePosition < filteredProducts.length - 1) setCurrentPosition(safePosition + 1)

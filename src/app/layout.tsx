@@ -27,9 +27,11 @@ export const viewport: Viewport = {
   themeColor: "#000000",
 }
 
+import { Toaster } from "sonner"
 import { QueryProvider } from "@/components/providers"
 import { OnlineStatus } from "@/components/online-status"
 import { SyncManager } from "@/components/sync-manager"
+import { PwaRegister } from "@/components/pwa-register"
 import { getCurrentUser } from "@/lib/actions/auth"
 
 export default async function RootLayout({
@@ -42,7 +44,9 @@ export default async function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <body className={`${splineSans.variable} ${geistMono.variable} antialiased bg-background-light dark:bg-background-dark text-text-main`}>
+        <Toaster position="top-center" richColors />
         <QueryProvider>
+          <PwaRegister />
           <OnlineStatus />
           <SyncManager />
           <div className="flex h-screen w-full bg-[#d8d2c7] overflow-hidden justify-center fixed inset-0">

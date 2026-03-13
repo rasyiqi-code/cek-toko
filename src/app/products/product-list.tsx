@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import { Plus, Search } from "lucide-react"
+import { useSync } from "@/lib/hooks/use-sync"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { createProduct, deleteProduct, updateProduct, updateStock } from "@/lib/actions/products"
@@ -106,8 +107,31 @@ export function ProductList({ initialProducts, categories, searchValue = "" }: {
     return bySearch && byStock && byCategory
   })
 
+  const { addToQueue, isOffline } = useSync()
+
   const handleSave = async (formData: AddProductPayload) => {
     setLoading(true)
+    
+    if (isOffline) {
+      const tempId = `temp-${Date.now()}`
+      const createdProduct: Product = {
+        id: tempId,
+        name: formData.name,
+        price: formData.price,
+        buyPrice: formData.buyPrice,
+        unit: formData.unit,
+        categoryId: formData.categoryId,
+        category: categories.find((c) => c.id === formData.categoryId) || { name: "Tanpa kategori" },
+        stock: { quantity: formData.initialStock },
+      }
+      
+      await addToQueue("CREATE_PRODUCT", formData as any)
+      setProducts([createdProduct, ...products])
+      setIsAdding(false)
+      setLoading(false)
+      return
+    }
+
     const res = await createProduct({
       name: formData.name,
       categoryId: formData.categoryId,
@@ -132,17 +156,50 @@ export function ProductList({ initialProducts, categories, searchValue = "" }: {
     setLoading(false)
   }
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string | any) => {
     if (!confirm("Hapus barang ini?")) return
     setLoading(true)
+
+    if (isOffline || id.toString().startsWith("temp-")) {
+      // For now, if it's a temp ID or we're offline, just remove it from local state
+      // Real sync for delete would need another queue action type.
+      setProducts(products.filter(item => item.id !== id))
+      if (!id.toString().startsWith("temp-")) {
+        await addToQueue("DELETE_PRODUCT", { id })
+      }
+      setLoading(false)
+      return
+    }
+
     const res = await deleteProduct(id)
     if (res.success) setProducts(products.filter(item => item.id !== id))
     else alert(res.error)
     setLoading(false)
   }
 
-  const handleEdit = async (id: string, data: { name: string; categoryId: string; price: string; buyPrice: string; unit: string; stock: number }) => {
+  const handleEdit = async (id: string | any, data: { name: string; categoryId: string; price: string; buyPrice: string; unit: string; stock: number }) => {
     setLoading(true)
+
+    if (isOffline || id.toString().startsWith("temp-")) {
+      setProducts(products.map(p => p.id === id ? {
+        ...p,
+        name: data.name,
+        categoryId: data.categoryId,
+        price: parseFloat(data.price),
+        buyPrice: parseFloat(data.buyPrice),
+        unit: data.unit,
+        category: categories.find(c => c.id === data.categoryId) || p.category,
+        stock: { quantity: data.stock },
+      } : p))
+      
+      if (!id.toString().startsWith("temp-")) {
+        await addToQueue("UPDATE_PRODUCT", { id, ...data })
+      }
+      setEditingProduct(null)
+      setLoading(false)
+      return
+    }
+
     const [prodRes, stockRes] = await Promise.all([
       updateProduct(id, {
         name: data.name,

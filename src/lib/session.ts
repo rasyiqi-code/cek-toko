@@ -4,7 +4,7 @@ export const SESSION_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 
 export type UserRole = "OWNER" | "PENJAGA" | "TIM_PENGECEK"
 
-export interface SessionUser {
+export type SessionUser = {
   id: string
   storeId: string
   name: string
@@ -14,13 +14,33 @@ export interface SessionUser {
   validUntil: string | null
 }
 
+import { createHmac, timingSafeEqual } from "crypto"
+
+const SECRET = process.env.SESSION_SECRET || "cektoko-fallback-secret-12345"
+
 export function encodeSession(user: SessionUser): string {
-  return Buffer.from(JSON.stringify(user)).toString("base64")
+  const payload = Buffer.from(JSON.stringify(user)).toString("base64")
+  const signature = createHmac("sha256", SECRET).update(payload).digest("base64")
+  return `${payload}.${signature}`
 }
 
 export function decodeSession(token: string): SessionUser | null {
   try {
-    return JSON.parse(Buffer.from(token, "base64").toString("utf-8"))
+    const [payload, signature] = token.split(".")
+    if (!payload || !signature) return null
+
+    // Verify signature
+    const expectedSignature = createHmac("sha256", SECRET).update(payload).digest("base64")
+    
+    // Use timingSafeEqual to prevent timing attacks
+    const isValid = timingSafeEqual(
+      Buffer.from(signature),
+      Buffer.from(expectedSignature)
+    )
+
+    if (!isValid) return null
+
+    return JSON.parse(Buffer.from(payload, "base64").toString("utf-8"))
   } catch {
     return null
   }

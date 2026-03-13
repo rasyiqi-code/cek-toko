@@ -4,19 +4,15 @@ import { cookies } from "next/headers"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 
-import { SESSION_COOKIE, SESSION_MAX_AGE, SessionUser, UserRole, encodeSession } from "@/lib/session"
+import { decodeSession, SESSION_COOKIE, SESSION_MAX_AGE, encodeSession } from "@/lib/session"
+import type { SessionUser, UserRole } from "@/lib/session"
 
 export async function getCurrentUser(): Promise<SessionUser | null> {
   const cookieStore = await cookies()
   const token = cookieStore.get(SESSION_COOKIE)?.value
   if (!token) return null
   
-  // Decoding logic moved to shared utility
-  try {
-    return JSON.parse(Buffer.from(token, "base64").toString("utf-8"))
-  } catch {
-    return null
-  }
+  return decodeSession(token)
 }
 
 export async function login(username: string, password: string) {
@@ -46,8 +42,9 @@ export async function login(username: string, password: string) {
       validUntil: store?.validUntil ? new Date(store.validUntil).toISOString() : null
     }
 
+    const token = encodeSession(session)
     const cookieStore = await cookies()
-    cookieStore.set(SESSION_COOKIE, encodeSession(session), {
+    cookieStore.set(SESSION_COOKIE, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -55,7 +52,7 @@ export async function login(username: string, password: string) {
       path: "/",
     })
 
-    return { success: true, user: session }
+    return { success: true, user: session, token }
   } catch (e) {
     console.error(e)
     return { success: false, error: "Gagal login" }
@@ -120,8 +117,9 @@ export async function registerStore(data: {
       validUntil: validUntil.toISOString()
     }
 
+    const token = encodeSession(session)
     const cookieStore = await cookies()
-    cookieStore.set(SESSION_COOKIE, encodeSession(session), {
+    cookieStore.set(SESSION_COOKIE, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -129,7 +127,7 @@ export async function registerStore(data: {
       path: "/",
     })
 
-    return { success: true, storeId: result.store.id }
+    return { success: true, storeId: result.store.id, token }
   } catch (e) {
     console.error(e)
     return { success: false, error: "Gagal registrasi toko" }

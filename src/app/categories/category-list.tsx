@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Plus, Pencil, Trash2, X, Check, FolderKanban } from "lucide-react"
+import { useSync } from "@/lib/hooks/use-sync"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -38,10 +39,23 @@ export function CategoryList({ initialCategories }: { initialCategories: Categor
     router.replace(`/categories?${params.toString()}`)
   }
 
+  const { addToQueue, isOffline } = useSync()
+
   const handleAdd = async () => {
     if (!newName.trim()) return
     setLoading(true)
     const label = newName.trim()
+
+    if (isOffline) {
+      const tempId = `temp-${Date.now()}`
+      setCategories([{ id: tempId, name: label }, ...categories])
+      await addToQueue("CREATE_CATEGORY", { name: label })
+      setNewName("")
+      setIsAdding(false)
+      setLoading(false)
+      return
+    }
+
     const res = await createCategory(label)
     if (res.success) {
       setCategories([{ id: crypto.randomUUID(), name: label }, ...categories])
@@ -57,6 +71,18 @@ export function CategoryList({ initialCategories }: { initialCategories: Categor
     if (!editName.trim()) return
     setLoading(true)
     const label = editName.trim()
+
+    if (isOffline || id.startsWith("temp-")) {
+      setCategories(categories.map((cat) => (cat.id === id ? { ...cat, name: label } : cat)))
+      if (!id.startsWith("temp-")) {
+        await addToQueue("UPDATE_CATEGORY", { id, name: label })
+      }
+      setEditingId(null)
+      setEditName("")
+      setLoading(false)
+      return
+    }
+
     const res = await updateCategory(id, label)
     if (res.success) {
       setCategories(categories.map((cat) => (cat.id === id ? { ...cat, name: label } : cat)))
@@ -71,6 +97,16 @@ export function CategoryList({ initialCategories }: { initialCategories: Categor
   const handleDelete = async (id: string) => {
     if (!confirm("Hapus kategori ini?")) return
     setLoading(true)
+
+    if (isOffline || id.startsWith("temp-")) {
+      setCategories(categories.filter((cat) => cat.id !== id))
+      if (!id.startsWith("temp-")) {
+        await addToQueue("DELETE_CATEGORY", { id })
+      }
+      setLoading(false)
+      return
+    }
+
     const res = await deleteCategory(id)
     if (res.success) {
       setCategories(categories.filter((cat) => cat.id !== id))

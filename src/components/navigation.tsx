@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { Home, Package, FileText, Boxes, ChevronLeft, UserCircle, LogOut, Users, Search, X, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { logout } from "@/lib/actions/auth"
+import { clearToken } from "@/lib/auth-client"
 import { getStoreSettings } from "@/lib/actions/settings"
 import { useRouter } from "next/navigation"
 import { useEffect, useState, useRef } from "react"
@@ -52,6 +53,7 @@ export function TopNav({
   const handleLogout = async () => {
     if (!confirm("Keluar dari aplikasi?")) return
     await logout()
+    await clearToken()
     router.push("/login")
     router.refresh()
   }
@@ -300,6 +302,7 @@ export function Sidebar({ user }: { user?: any }) {
           onClick={async () => {
             if (!confirm("Keluar dari aplikasi?")) return
             await logout()
+            await clearToken()
             window.location.href = "/login"
           }}
           className="w-full mt-4 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-black text-red-500 hover:bg-red-500/10 transition-all border border-red-500/20"

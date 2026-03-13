@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { login } from "@/lib/actions/auth"
+import { saveToken } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
@@ -29,6 +30,7 @@ export default function LoginPage() {
     try {
       const res = await login(username, password)
       if (res.success) {
+        if (res.token) await saveToken(res.token)
         router.push("/dashboard")
         router.refresh()
       } else {
