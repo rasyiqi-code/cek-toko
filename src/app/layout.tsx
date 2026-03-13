@@ -18,6 +18,11 @@ export const metadata: Metadata = {
   title: "CekToko - Sistem Cek Stok Warung Madura",
   description: "Aplikasi Cek Stok Warung Madura Offline-First",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/favicon.png",
+    apple: "/icon.png",
+  },
 }
 
 export const viewport: Viewport = {
