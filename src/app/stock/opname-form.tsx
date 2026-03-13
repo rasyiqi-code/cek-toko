@@ -27,7 +27,7 @@ interface User {
   role: string
 }
 
-export function StockOpnameForm({ products, categories, users }: { products: Product[], categories: Category[], users: any[] }) {
+export function StockOpnameForm({ products, categories, users }: { products: Product[], categories: Category[], users: User[] }) {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
   const [opnameData, setOpnameData] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
@@ -38,11 +38,14 @@ export function StockOpnameForm({ products, categories, users }: { products: Pro
 
   useEffect(() => {
     const saved = localStorage.getItem("cek_toko_last_guardian")
-    if (saved) {
-      setGuardianName(saved)
-      setStarted(true)
-    }
-    setIsHydrated(true)
+    const timerId = setTimeout(() => {
+      if (saved) {
+        setGuardianName(saved)
+        setStarted(true)
+      }
+      setIsHydrated(true)
+    }, 0)
+    return () => clearTimeout(timerId)
   }, [])
 
   const guardians = users.filter(u => u.role === "OWNER" || u.role === "TIM_PENGECEK")

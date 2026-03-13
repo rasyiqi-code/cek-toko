@@ -1,47 +1,53 @@
 "use client"
 
-import { useLayoutEffect, useState, useEffect } from "react"
+import { useState, useEffect, useSyncExternalStore } from "react"
 import { cn } from "@/lib/utils"
 import { WifiOff, RefreshCw, CheckCircle2 } from "lucide-react"
 import { useSync } from "@/lib/hooks/use-sync"
 
-export function OnlineStatus() {
-  const [isOnline, setIsOnline] = useState(true)
-  const { queue } = useSync()
-  const [isClient, setIsClient] = useState(false)
-  const [showSyncSuccess, setShowSyncSuccess] = useState(false)
+function subscribe(callback: () => void) {
+  window.addEventListener("online", callback)
+  window.addEventListener("offline", callback)
+  return () => {
+    window.removeEventListener("online", callback)
+    window.removeEventListener("offline", callback)
+  }
+}
 
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
+function getSnapshot() {
+  return navigator.onLine
+}
+
+function getServerSnapshot() {
+  return true
+}
+
+export function OnlineStatus() {
+  const isOnline = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  const { queue } = useSync()
+  const isClient = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  )
+  const [showSyncSuccess, setShowSyncSuccess] = useState(false)
 
   // Track sync completion
   const [prevQueueLength, setPrevQueueLength] = useState(0)
   useEffect(() => {
     if (prevQueueLength > 0 && queue.length === 0 && isOnline) {
-      setShowSyncSuccess(true)
-      const timer = setTimeout(() => setShowSyncSuccess(false), 3000)
-      return () => clearTimeout(timer)
+      const timerId = setTimeout(() => setShowSyncSuccess(true), 0)
+      const hideTimer = setTimeout(() => setShowSyncSuccess(false), 3000)
+      return () => {
+        clearTimeout(timerId)
+        clearTimeout(hideTimer)
+      }
     }
-    setPrevQueueLength(queue.length)
+    const nextValue = queue.length
+    const timerId = setTimeout(() => setPrevQueueLength(nextValue), 0)
+    return () => clearTimeout(timerId)
   }, [queue.length, isOnline, prevQueueLength])
 
-  useLayoutEffect(() => {
-    if (typeof navigator !== "undefined") {
-      setIsOnline(navigator.onLine)
-    }
-
-    const handleOnline = () => setIsOnline(true)
-    const handleOffline = () => setIsOnline(false)
-
-    window.addEventListener("online", handleOnline)
-    window.addEventListener("offline", handleOffline)
-
-    return () => {
-      window.removeEventListener("online", handleOnline)
-      window.removeEventListener("offline", handleOffline)
-    }
-  }, [])
 
   if (!isClient) return null
 

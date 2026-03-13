@@ -6,11 +6,27 @@ import { ProductList } from "./product-list"
 import { TopNav } from "@/components/navigation"
 import { Plus } from "lucide-react"
 import Link from "next/link"
-import { Suspense, useState, useEffect } from "react"
+import { useState, useEffect } from "react"
+
+interface Product {
+  id: string
+  name: string
+  categoryId: string
+  price: number | string | { toString: () => string }
+  buyPrice: number | string | { toString: () => string }
+  unit: string
+  category: { name: string }
+  stock: { quantity: number } | null
+}
+
+interface Category {
+  id: string
+  name: string
+}
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<any[]>([])
-  const [categories, setCategories] = useState<any[]>([])
+  const [products, setProducts] = useState<Product[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(true)
 

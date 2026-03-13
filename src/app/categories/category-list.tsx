@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Pencil, Trash2, X, Check, FolderKanban } from "lucide-react"
+import { Pencil, Trash2, X, Check, FolderKanban } from "lucide-react"
 import { useSync } from "@/lib/hooks/use-sync"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -26,9 +26,11 @@ export function CategoryList({ initialCategories }: { initialCategories: Categor
 
   useEffect(() => {
     if (searchParams.get("add") === "true") {
-      setIsAdding(true)
+      const timerId = setTimeout(() => setIsAdding(true), 0)
+      return () => clearTimeout(timerId)
     } else {
-      setIsAdding(false)
+      const timerId = setTimeout(() => setIsAdding(false), 0)
+      return () => clearTimeout(timerId)
     }
   }, [searchParams])
 

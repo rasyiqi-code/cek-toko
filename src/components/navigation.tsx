@@ -2,13 +2,14 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Package, FileText, Boxes, ChevronLeft, UserCircle, LogOut, Users, Search, X, Loader2 } from "lucide-react"
+import { Home, Package, FileText, Boxes, ChevronLeft, LogOut, Users, Search, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { logout } from "@/lib/actions/auth"
 import { clearToken } from "@/lib/auth-client"
 import { getStoreSettings } from "@/lib/actions/settings"
 import { useRouter } from "next/navigation"
 import { useEffect, useState, useRef } from "react"
+import { SessionUser } from "@/lib/session"
 
 export function TopNav({ 
   title, 
@@ -16,7 +17,6 @@ export function TopNav({
   backHref,
   rightAction,
   className,
-  user,
   onSearch
 }: { 
   title: string, 
@@ -24,7 +24,6 @@ export function TopNav({
   backHref?: string,
   rightAction?: React.ReactNode,
   className?: string,
-  user?: any,
   onSearch?: (value: string) => void
 }) {
   const router = useRouter()
@@ -36,15 +35,21 @@ export function TopNav({
     licenseKey?: string,
     validUntil?: string | Date
   } | null>(null)
+  const [daysRemaining, setDaysRemaining] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchSettings = async () => {
       const settings = await getStoreSettings()
-      setStoreName(settings.storeName)
+      setStoreName(settings.storeName || "CekToko")
       setLicenseInfo({
-        licenseKey: settings.licenseKey,
-        validUntil: settings.validUntil
+        licenseKey: settings.licenseKey ?? undefined,
+        validUntil: settings.validUntil ?? undefined
       })
+      
+      if (settings.validUntil) {
+        const diff = new Date(settings.validUntil).getTime() - Date.now()
+        setDaysRemaining(Math.ceil(diff / (1000 * 60 * 60 * 24)))
+      }
     }
     fetchSettings()
   }, [])
@@ -84,12 +89,13 @@ export function TopNav({
             <h1 className="text-xl font-black tracking-tight text-text-main leading-none">{title === "Dashboard Toko" ? storeName : title}</h1>
           </div>
           <div className="flex items-center gap-2">
-            {licenseInfo?.validUntil && (
+            {daysRemaining !== null && (
               (() => {
-                const diff = new Date(licenseInfo.validUntil).getTime() - Date.now()
-                const days = Math.ceil(diff / (1000 * 60 * 60 * 24))
-                const isTrial = !licenseInfo.licenseKey || licenseInfo.licenseKey === "TRIAL-14D"
+                const days = daysRemaining
+                const isTrial = !licenseInfo?.licenseKey || licenseInfo.licenseKey === "TRIAL-14D"
                 
+                if (days <= 0) return null
+
                 if (isTrial && days <= 14) {
                   return (
                     <div className="px-2 py-0.5 mr-2 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center gap-1.5 shadow-sm">
@@ -101,17 +107,14 @@ export function TopNav({
                   )
                 }
                 
-                if (days > 0) {
-                  return (
-                    <div className="px-2 py-0.5 mr-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-1.5 shadow-sm">
-                      <div className="size-1 rounded-full bg-emerald-500" />
-                      <span className="text-[8px] font-black text-emerald-600 uppercase tracking-tighter">
-                        Premium
-                      </span>
-                    </div>
-                  )
-                }
-                return null
+                return (
+                  <div className="px-2 py-0.5 mr-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-1.5 shadow-sm">
+                    <div className="size-1 rounded-full bg-emerald-500" />
+                    <span className="text-[8px] font-black text-emerald-600 uppercase tracking-tighter">
+                      Premium
+                    </span>
+                  </div>
+                )
               })()
             )}
             <button 
@@ -208,7 +211,7 @@ const getNavItems = (role: string) => {
   return items
 }
 
-export function BottomNav({ user }: { user?: any }) {
+export function BottomNav({ user }: { user?: SessionUser | null }) {
   const pathname = usePathname()
   const role = user?.role || "PENJAGA"
   const navItems = getNavItems(role)
@@ -246,7 +249,7 @@ export function BottomNav({ user }: { user?: any }) {
   )
 }
 
-export function Sidebar({ user }: { user?: any }) {
+export function Sidebar({ user }: { user?: SessionUser | null }) {
   const pathname = usePathname()
   const role = user?.role || "PENJAGA"
   const navItems = getNavItems(role)

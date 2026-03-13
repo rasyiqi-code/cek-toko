@@ -11,7 +11,7 @@ export async function getStockOpnames() {
   const opnames = await prisma.stockOpname.findMany({
     where: {
       product: { storeId: user.storeId }
-    } as any,
+    },
     include: {
       product: {
         include: { category: true }
@@ -47,7 +47,7 @@ export async function createStockOpname(data: {
       include: { stock: true }
     })
 
-    if (!product || (product as any).storeId !== user.storeId) {
+    if (!product || product.storeId !== user.storeId) {
       throw new Error("Barang tidak ditemukan")
     }
 
@@ -67,7 +67,7 @@ export async function createStockOpname(data: {
           stockNew: data.stockNew,
           difference,
           value,
-        } as any
+        }
       }),
       prisma.stock.update({
         where: { productId: data.productId },

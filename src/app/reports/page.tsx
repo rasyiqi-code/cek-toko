@@ -1,4 +1,4 @@
-import { getCategoryReports, getStockDetails } from "@/lib/actions/reports"
+import { getCategoryReports } from "@/lib/actions/reports"
 import { getStockOpnames } from "@/lib/actions/stock"
 import { getActiveGuardianDuty } from "@/lib/actions/guardian"
 import { ReportView } from "@/app/reports/report-view"
@@ -10,9 +10,8 @@ const splineSans = Spline_Sans({
 })
 
 export default async function ReportsPage() {
-  const [categoryReports, stockDetails, stockOpnames, activeGuardian] = await Promise.all([
+  const [categoryReports, stockOpnames, activeGuardian] = await Promise.all([
     getCategoryReports(),
-    getStockDetails(),
     getStockOpnames(),
     getActiveGuardianDuty()
   ])
@@ -21,7 +20,6 @@ export default async function ReportsPage() {
     <div className={`${splineSans.className} enter-rise pb-16`}>
       <ReportView 
         categoryReports={categoryReports} 
-        stockDetails={stockDetails} 
         stockOpnames={stockOpnames}
         activeGuardian={activeGuardian}
       />

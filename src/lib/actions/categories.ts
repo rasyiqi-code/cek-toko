@@ -8,8 +8,8 @@ export async function getCategories() {
   const user = await getCurrentUser()
   if (!user) return []
 
-  return await (prisma.category as any).findMany({
-    where: { storeId: user.storeId } as any,
+  return await prisma.category.findMany({
+    where: { storeId: user.storeId },
     orderBy: { name: "asc" },
   })
 }
@@ -20,11 +20,11 @@ export async function createCategory(name: string) {
     if (!user) return { success: false, error: "Unauthorized" }
     if (!user.storeValid) return { success: false, error: "Lisensi toko tidak valid atau berakhir." }
 
-    await (prisma.category as any).create({
+    await prisma.category.create({
       data: {
         name,
         storeId: user.storeId
-      } as any,
+      },
     })
     revalidatePath("/categories")
     return { success: true }
@@ -40,7 +40,7 @@ export async function updateCategory(id: string, name: string) {
     if (!user.storeValid) return { success: false, error: "Lisensi toko tidak valid atau berakhir." }
 
     const existing = await prisma.category.findUnique({ where: { id } })
-    if (!existing || (existing as any).storeId !== user.storeId) {
+    if (!existing || existing.storeId !== user.storeId) {
       return { success: false, error: "Kategori tidak ditemukan." }
     }
 
@@ -62,7 +62,7 @@ export async function deleteCategory(id: string) {
     if (!user.storeValid) return { success: false, error: "Lisensi toko tidak valid atau berakhir." }
 
     const existing = await prisma.category.findUnique({ where: { id } })
-    if (!existing || (existing as any).storeId !== user.storeId) {
+    if (!existing || existing.storeId !== user.storeId) {
       return { success: false, error: "Kategori tidak ditemukan." }
     }
 

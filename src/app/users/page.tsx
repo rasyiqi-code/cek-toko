@@ -6,6 +6,19 @@ import { Plus } from "lucide-react"
 import Link from "next/link"
 import { Suspense } from "react"
 
+interface UserData {
+  id: string
+  name: string
+  username: string
+  role: string
+}
+
+interface ActiveGuardian {
+  userId: string
+  userName: string
+  startDate: string | Date
+}
+
 export default async function UsersPage() {
   const users = await getUsers()
   const activeGuardian = await getActiveGuardianDuty()
@@ -24,7 +37,7 @@ export default async function UsersPage() {
         <p className="text-sm font-medium text-muted leading-relaxed">Kelola akses owner, tim pengecek, dan pengguna toko.</p>
       </div>
       <Suspense fallback={<div className="h-40 animate-pulse bg-surface rounded-2xl mx-4" />}>
-        <UserList initialUsers={users as any} initialActiveGuardian={activeGuardian} />
+        <UserList initialUsers={users as UserData[]} initialActiveGuardian={activeGuardian as ActiveGuardian | null} />
       </Suspense>
     </div>
   )

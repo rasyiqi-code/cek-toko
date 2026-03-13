@@ -9,7 +9,7 @@ export async function getProducts() {
   if (!user) return []
 
   const products = await prisma.product.findMany({
-    where: { storeId: user.storeId } as any,
+    where: { storeId: user.storeId },
     include: {
       category: true,
       stock: true,
@@ -42,7 +42,7 @@ export async function createProduct(data: {
         stock: {
           create: { quantity: 0 }
         }
-      } as any,
+      },
     })
     revalidatePath("/products")
     return { success: true, product: { ...product, price: Number(product.price), buyPrice: Number(product.buyPrice) } }
@@ -66,7 +66,7 @@ export async function updateProduct(id: string, data: {
 
     // Check ownership
     const existing = await prisma.product.findUnique({ where: { id } })
-    if (!existing || (existing as any).storeId !== user.storeId) {
+    if (!existing || existing.storeId !== user.storeId) {
       return { success: false, error: "Barang tidak ditemukan." }
     }
 
@@ -88,7 +88,7 @@ export async function deleteProduct(id: string) {
     if (!user.storeValid) return { success: false, error: "Lisensi toko tidak valid atau berakhir." }
 
     const existing = await prisma.product.findUnique({ where: { id } })
-    if (!existing || (existing as any).storeId !== user.storeId) {
+    if (!existing || existing.storeId !== user.storeId) {
       return { success: false, error: "Barang tidak ditemukan." }
     }
 
@@ -111,7 +111,7 @@ export async function updateStock(productId: string, quantity: number) {
     if (!user.storeValid) return { success: false, error: "Lisensi toko tidak valid atau berakhir." }
 
     const existing = await prisma.product.findUnique({ where: { id: productId } })
-    if (!existing || (existing as any).storeId !== user.storeId) {
+    if (!existing || existing.storeId !== user.storeId) {
       return { success: false, error: "Barang tidak ditemukan." }
     }
 

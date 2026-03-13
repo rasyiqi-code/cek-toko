@@ -25,12 +25,8 @@ export function SyncManager() {
      }
   }, [isSyncing])
 
-  const processAction = useCallback(async (action: SyncAction, token: string | null) => {
+  const processAction = useCallback(async (action: SyncAction) => {
     try {
-      // In a real scenario, we might want to pass the token to the server action
-      // if it's called via an API endpoint. For Server Actions, they rely on cookies.
-      // For cross-platform support, we'll eventually move these to fetch() calls with token headers.
-      
       if (action.type === "CREATE_STOCK_OPNAME") {
         const res = await createStockOpname(action.payload as Parameters<typeof createStockOpname>[0])
         return res.success
@@ -53,7 +49,15 @@ export function SyncManager() {
         return res.success
       }
       if (action.type === "UPDATE_PRODUCT") {
-        const p = action.payload as any
+        const p = action.payload as {
+          id: string
+          name: string
+          categoryId: string
+          price: string
+          buyPrice: string
+          unit: string
+          stock: number
+        }
         const [prodRes, stockRes] = await Promise.all([
           updateProduct(p.id, {
             name: p.name,

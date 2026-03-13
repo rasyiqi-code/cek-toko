@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { activateLicense, claimTrial, getStoreSettings } from "@/lib/actions/settings"
 import { logout } from "@/lib/actions/auth"
-import Link from "next/link"
 import { Loader2, ChevronLeft } from "lucide-react"
 
 export default function ActivateLicensePage() {
@@ -16,7 +15,7 @@ export default function ActivateLicensePage() {
   useEffect(() => {
     async function checkStatus() {
       const settings = await getStoreSettings()
-      if (settings.success && (settings.licenseKey !== null || (settings.validUntil && new Date(settings.validUntil) > new Date()))) {
+      if (settings.success && (settings.licenseKey || (settings.validUntil && new Date(settings.validUntil) > new Date()))) {
         setIsValid(true)
       }
     }

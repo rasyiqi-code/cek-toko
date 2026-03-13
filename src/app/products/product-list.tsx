@@ -1,10 +1,8 @@
 "use client"
 
 import { useState, useEffect, useRef, useCallback } from "react"
-import { Plus, Search } from "lucide-react"
 import { useSync } from "@/lib/hooks/use-sync"
 import { useSearchParams, useRouter } from "next/navigation"
-import { Input } from "@/components/ui/input"
 import { createProduct, deleteProduct, updateProduct, updateStock } from "@/lib/actions/products"
 import { cn } from "@/lib/utils"
 import { ProductCard } from "./product-card"
@@ -54,8 +52,8 @@ export function ProductList({ initialProducts, categories, searchValue = "" }: {
     const onMouseDown = useCallback((e: React.MouseEvent) => {
       const el = ref.current
       if (!el) return
-      let startX = e.pageX - el.offsetLeft
-      let scrollLeft = el.scrollLeft
+      const startX = e.pageX - el.offsetLeft
+      const scrollLeft = el.scrollLeft
       const onMove = (ev: MouseEvent) => {
         el.scrollLeft = scrollLeft - (ev.pageX - el.offsetLeft - startX)
       }
@@ -81,14 +79,15 @@ export function ProductList({ initialProducts, categories, searchValue = "" }: {
     return { ref, onMouseDown }
   }
 
-  const stockScroll = useDragScroll()
   const catScroll = useDragScroll()
 
   useEffect(() => {
     if (searchParams.get("add") === "true") {
-      setIsAdding(true)
+      const timerId = setTimeout(() => setIsAdding(true), 0)
+      return () => clearTimeout(timerId)
     } else {
-      setIsAdding(false)
+      const timerId = setTimeout(() => setIsAdding(false), 0)
+      return () => clearTimeout(timerId)
     }
   }, [searchParams])
 
@@ -125,7 +124,7 @@ export function ProductList({ initialProducts, categories, searchValue = "" }: {
         stock: { quantity: formData.initialStock },
       }
       
-      await addToQueue("CREATE_PRODUCT", formData as any)
+      await addToQueue("CREATE_PRODUCT", formData as unknown as Record<string, unknown>)
       setProducts([createdProduct, ...products])
       setIsAdding(false)
       setLoading(false)
@@ -156,7 +155,7 @@ export function ProductList({ initialProducts, categories, searchValue = "" }: {
     setLoading(false)
   }
 
-  const handleDelete = async (id: string | any) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Hapus barang ini?")) return
     setLoading(true)
 
@@ -177,7 +176,7 @@ export function ProductList({ initialProducts, categories, searchValue = "" }: {
     setLoading(false)
   }
 
-  const handleEdit = async (id: string | any, data: { name: string; categoryId: string; price: string; buyPrice: string; unit: string; stock: number }) => {
+  const handleEdit = async (id: string, data: { name: string; categoryId: string; price: string; buyPrice: string; unit: string; stock: number }) => {
     setLoading(true)
 
     if (isOffline || id.toString().startsWith("temp-")) {

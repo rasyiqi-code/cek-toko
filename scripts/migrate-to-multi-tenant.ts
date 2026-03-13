@@ -9,7 +9,7 @@ async function main() {
   console.log('Starting migration to multi-tenant...')
 
   // 1. Create Default Store
-  const defaultStore = await (prisma as any).store.upsert({
+  const defaultStore = await prisma.store.upsert({
     where: { id: 'default-store' },
     update: {},
     create: {
@@ -23,7 +23,7 @@ async function main() {
   console.log(`Default store created/verified: ${defaultStore.id}`)
 
   // 2. Link Users
-  const userUpdate = await prisma.$executeRaw`UPDATE "User" SET "storeId" = 'default-store' WHERE "storeId" IS NULL`
+  await prisma.$executeRaw`UPDATE "User" SET "storeId" = 'default-store' WHERE "storeId" IS NULL`
   console.log(`Linked users to default store`)
 
   // 3. Link Categories

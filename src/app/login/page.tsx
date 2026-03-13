@@ -36,7 +36,7 @@ export default function LoginPage() {
       } else {
         setError(res.error || "Login gagal")
       }
-    } catch (err) {
+    } catch {
       setError("Terjadi kesalahan sistem")
     } finally {
       setLoading(false)

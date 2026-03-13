@@ -1,18 +1,14 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { Trophy, Sparkles, CircleCheckBig } from "lucide-react"
 import { TopNav } from "@/components/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
-function mapEmoji(name: string) {
-  const val = name.toLowerCase()
-  if (val.includes("mie") || val.includes("indomie")) return "🍜"
-  if (val.includes("kopi")) return "☕"
-  if (val.includes("rokok")) return "🚬"
-  if (val.includes("aqua")) return "💧"
-  return "📦"
+interface Guardian {
+  userName: string
+  startDate: string | Date
 }
 
 function CountUp({ target }: { target: number }) {
@@ -37,22 +33,16 @@ interface CategoryReport {
   auditValue: number
 }
 
-interface StockDetail {
-  id: string
-  name: string
-  stock: { quantity: number } | null
-}
-
 interface StockOpname {
   id: string
   productId: string
   stockOld: number
   stockNew: number
   difference: number
-  value: any
+  value: number
   checkerName?: string
   guardianName: string
-  createdAt: any
+  createdAt: string | Date
   product: {
     name: string
     category: { name: string }
@@ -61,22 +51,14 @@ interface StockOpname {
 
 export function ReportView({
   categoryReports,
-  stockDetails,
   stockOpnames,
   activeGuardian
 }: {
   categoryReports: CategoryReport[],
-  stockDetails: StockDetail[],
   stockOpnames: StockOpname[],
-  activeGuardian?: any
+  activeGuardian?: Guardian | null
 }) {
   const totalAuditResult = categoryReports.reduce((acc, cat) => acc + cat.auditValue, 0)
-
-  const topProducts = useMemo(() => {
-    return [...stockDetails]
-      .sort((a, b) => (b.stock?.quantity || 0) - (a.stock?.quantity || 0))
-      .slice(0, 3)
-  }, [stockDetails])
 
   return (
     <div className="flex flex-col min-h-full relative pb-24">

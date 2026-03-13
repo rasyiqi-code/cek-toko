@@ -62,7 +62,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-col min-h-full relative">
-      <TopNav title="Dashboard Toko" variant="greeting" user={user} />
+      <TopNav title="Dashboard Toko" variant="greeting" />
 
       <div className="flex-1 pb-24">
         {/* Stats Grid */}

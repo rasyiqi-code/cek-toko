@@ -11,12 +11,12 @@ export async function getStoreSettings() {
     const user = await getCurrentUser()
     if (!user) throw new Error("Unauthorized")
 
-    let settings = await (prisma as any).storeProfile.findUnique({
+    let settings = await prisma.storeProfile.findUnique({
       where: { storeId: user.storeId }
     })
     
     if (!settings) {
-      settings = await (prisma as any).storeProfile.create({
+      settings = await prisma.storeProfile.create({
         data: {
           storeId: user.storeId,
           storeName: "CekToko"
@@ -24,19 +24,25 @@ export async function getStoreSettings() {
       })
     }
 
-    const store = await (prisma as any).store.findUnique({
+    const store = await prisma.store.findUnique({
       where: { id: user.storeId },
       select: { licenseKey: true, validUntil: true }
     })
     
     return {
+      success: true,
       ...settings,
       licenseKey: store?.licenseKey,
       validUntil: store?.validUntil
     }
   } catch (error) {
     console.error("Failed to fetch store settings:", error)
-    return { storeName: "CekToko" }
+    return { 
+      success: false, 
+      storeName: "CekToko",
+      licenseKey: null,
+      validUntil: null
+    }
   }
 }
 
@@ -81,7 +87,7 @@ export async function activateLicense(licenseKey: string) {
       validUntil = new Date(Date.now() + durationInDays * 24 * 60 * 60 * 1000)
     }
 
-    await (prisma as any).store.update({
+    await prisma.store.update({
       where: { id: user.storeId },
       data: {
         licenseKey,
@@ -119,7 +125,7 @@ export async function claimTrial() {
     const user = await getCurrentUser()
     if (!user) return { success: false, error: "Unauthorized" }
 
-    const store = await (prisma as any).store.findUnique({
+    const store = await prisma.store.findUnique({
       where: { id: user.storeId }
     })
 
@@ -138,7 +144,7 @@ export async function claimTrial() {
     const now = new Date()
     const validUntil = new Date(now.getTime() + durationInDays * 24 * 60 * 60 * 1000)
 
-    await (prisma as any).store.update({
+    await prisma.store.update({
       where: { id: user.storeId },
       data: {
         isValid: true,

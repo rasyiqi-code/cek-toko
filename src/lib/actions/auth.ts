@@ -17,7 +17,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 
 export async function login(username: string, password: string) {
   try {
-    const user = await (prisma.user as any).findFirst({
+    const user = await prisma.user.findFirst({
       where: { username },
       include: { store: true }
     })
@@ -28,13 +28,13 @@ export async function login(username: string, password: string) {
 
     // License Check
     const now = new Date()
-    const store = (user as any).store
+    const store = user.store
     const isLicenseExpired = store?.validUntil && new Date(store.validUntil) < now
     const storeValid = store?.isValid && !isLicenseExpired
 
     const session: SessionUser = {
       id: user.id,
-      storeId: (user as any).storeId,
+      storeId: user.storeId,
       name: user.name,
       username: user.username,
       role: user.role as UserRole,
@@ -79,7 +79,7 @@ export async function registerStore(data: {
     const trialDuration = 14 * 24 * 60 * 60 * 1000 // 14 days
     const validUntil = new Date(Date.now() + trialDuration)
 
-    const result = await prisma.$transaction(async (tx: any) => {
+    const result = await prisma.$transaction(async (tx) => {
       const store = await tx.store.create({
         data: {
           name: data.storeName,
@@ -138,7 +138,7 @@ export async function getUsers() {
   const currentUser = await getCurrentUser()
   if (!currentUser) return []
 
-  return await (prisma.user as any).findMany({
+  return await prisma.user.findMany({
     where: { storeId: currentUser.storeId },
     select: { id: true, name: true, username: true, role: true },
     orderBy: { username: "asc" },
@@ -155,23 +155,23 @@ export async function createUser(data: {
     const currentUser = await getCurrentUser()
     if (!currentUser) return { success: false, error: "Unauthorized" }
 
-    const existing = await (prisma.user as any).findFirst({
+    const existing = await prisma.user.findFirst({
       where: {
         username: data.username,
         storeId: currentUser.storeId
-      } as any
+      }
     })
     if (existing) return { success: false, error: "Username sudah dipakai di toko ini" }
 
     const hashed = await bcrypt.hash(data.password, 10)
-    await (prisma.user as any).create({
+    await prisma.user.create({
       data: {
         storeId: currentUser.storeId,
         name: data.name,
         username: data.username,
         password: hashed,
         role: data.role
-      } as any,
+      },
     })
     return { success: true }
   } catch {
@@ -184,14 +184,14 @@ export async function deleteUser(id: string) {
     const currentUser = await getCurrentUser()
     if (!currentUser) return { success: false, error: "Unauthorized" }
 
-    const user = await (prisma.user as any).findUnique({ where: { id } })
-    if (!user || (user as any).storeId !== currentUser.storeId) {
+    const user = await prisma.user.findUnique({ where: { id } })
+    if (!user || user.storeId !== currentUser.storeId) {
       return { success: false, error: "User tidak ditemukan" }
     }
 
-    if ((user as any).role === "OWNER") {
-      const ownerCount = await (prisma.user as any).count({
-        where: { storeId: currentUser.storeId, role: "OWNER" } as any
+    if (user.role === "OWNER") {
+      const ownerCount = await prisma.user.count({
+        where: { storeId: currentUser.storeId, role: "OWNER" }
       })
       if (ownerCount <= 1) return { success: false, error: "Tidak bisa hapus Owner terakhir" }
     }

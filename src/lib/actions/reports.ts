@@ -2,18 +2,6 @@
 
 import { prisma } from "@/lib/prisma"
 
-interface CategoryProduct {
-  price: any
-  buyPrice: any
-  stock: { quantity: number } | null
-  opnames: { value: any }[]
-}
-
-interface CategoryData {
-  id: string
-  name: string
-  products: CategoryProduct[]
-}
 
 export async function getCategoryReports() {
   const categories = await prisma.category.findMany({
@@ -30,13 +18,13 @@ export async function getCategoryReports() {
     }
   })
 
-  return categories.map((cat: any) => {
+  return categories.map((cat) => {
     const totalItems = cat.products.length
-    const totalStock = cat.products.reduce((acc: number, p: any) => acc + (p.stock?.quantity || 0), 0)
+    const totalStock = cat.products.reduce((acc: number, p) => acc + (p.stock?.quantity || 0), 0)
     
-    const currentInventoryValue = cat.products.reduce((acc: number, p: any) => acc + (Number(p.price) * (p.stock?.quantity || 0)), 0)
+    const currentInventoryValue = cat.products.reduce((acc: number, p) => acc + (Number(p.price) * (p.stock?.quantity || 0)), 0)
     
-    const auditValue = cat.products.reduce((acc: number, p: any) => {
+    const auditValue = cat.products.reduce((acc: number, p) => {
       const latestOpname = p.opnames?.[0]
       return acc + (latestOpname ? Number(latestOpname.value) : 0)
     }, 0)

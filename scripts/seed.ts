@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 import { PrismaPg } from "@prisma/adapter-pg"
+import bcrypt from "bcryptjs"
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
@@ -145,7 +146,6 @@ async function seed() {
   console.log(`✅ Store: ${store.name} (${store.id})`)
 
   // 2. Create Owner account
-  const bcrypt = require("bcryptjs")
   const hashedPassword = await bcrypt.hash("adminpassword", 10)
   const owner = await prisma.user.upsert({
     where: { 

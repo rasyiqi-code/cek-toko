@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Trash2, User, ShieldCheck, ShieldAlert, Shield, Loader2, X, ShieldPlus, CheckCircle2 } from "lucide-react"
+import { Trash2, User, ShieldCheck, Shield, Loader2, X, ShieldPlus, CheckCircle2 } from "lucide-react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,7 +10,6 @@ import { createUser, deleteUser } from "@/lib/actions/auth"
 import type { UserRole } from "@/lib/session"
 import { setGuardianDuty } from "@/lib/actions/guardian"
 import { cn } from "@/lib/utils"
-import { TopNav } from "@/components/navigation"
 
 interface UserData {
   id: string
@@ -19,7 +18,13 @@ interface UserData {
   role: string
 }
 
-export function UserList({ initialUsers, initialActiveGuardian }: { initialUsers: UserData[], initialActiveGuardian: any }) {
+interface ActiveGuardian {
+  userId: string
+  userName: string
+  startDate: string | Date
+}
+
+export function UserList({ initialUsers, initialActiveGuardian }: { initialUsers: UserData[], initialActiveGuardian: ActiveGuardian | null }) {
   const [users, setUsers] = useState(initialUsers)
   const [activeGuardian, setActiveGuardian] = useState(initialActiveGuardian)
   const [isAdding, setIsAdding] = useState(false)
@@ -37,9 +42,11 @@ export function UserList({ initialUsers, initialActiveGuardian }: { initialUsers
 
   useEffect(() => {
     if (searchParams.get("add") === "true") {
-      setIsAdding(true)
+      const timerId = setTimeout(() => setIsAdding(true), 0)
+      return () => clearTimeout(timerId)
     } else {
-      setIsAdding(false)
+      const timerId = setTimeout(() => setIsAdding(false), 0)
+      return () => clearTimeout(timerId)
     }
   }, [searchParams])
 
@@ -66,11 +73,11 @@ export function UserList({ initialUsers, initialActiveGuardian }: { initialUsers
     setLoading(false)
   }
 
-  const startDeletePress = (id: string, username: string) => {
+  const startDeletePress = (id: string) => {
     if (loading) return
     setPressingId(id)
     const timer = setTimeout(() => {
-      handleDelete(id, username)
+      handleDelete(id)
       setPressingId(null)
     }, 1500)
     setPressTimer(timer)
@@ -82,7 +89,7 @@ export function UserList({ initialUsers, initialActiveGuardian }: { initialUsers
     setPressingId(null)
   }
 
-  const handleDelete = async (id: string, username: string) => {
+  const handleDelete = async (id: string) => {
     setLoading(true)
     const res = await deleteUser(id)
     if (res.success) {
@@ -140,10 +147,10 @@ export function UserList({ initialUsers, initialActiveGuardian }: { initialUsers
                 {user.role !== "OWNER" && (
                   <div className="relative">
                     <button
-                      onMouseDown={() => startDeletePress(user.id, user.username)}
+                      onMouseDown={() => startDeletePress(user.id)}
                       onMouseUp={cancelDeletePress}
                       onMouseLeave={cancelDeletePress}
-                      onTouchStart={() => startDeletePress(user.id, user.username)}
+                      onTouchStart={() => startDeletePress(user.id)}
                       onTouchEnd={cancelDeletePress}
                       disabled={loading}
                       className={cn(
