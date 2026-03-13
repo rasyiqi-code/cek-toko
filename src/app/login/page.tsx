@@ -17,10 +17,17 @@ export default function LoginPage() {
   const router = useRouter()
 
   useEffect(() => {
+    // Check if already registered
     if (localStorage.getItem("cek_toko_is_registered") === "true") {
       setIsRegistered(true)
     }
-  }, [])
+
+    // Check if already logged in (client-side hint)
+    const hasToken = document.cookie.includes("cek_toko_session_token")
+    if (hasToken) {
+      router.push("/dashboard")
+    }
+  }, [router])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
