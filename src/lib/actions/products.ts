@@ -16,7 +16,7 @@ export async function getProducts() {
     },
     orderBy: { createdAt: "desc" },
   })
-  return products.map((p) => ({
+  return products.map((p: (typeof products)[0]) => ({
     ...p,
     price: Number(p.price),
     buyPrice: Number(p.buyPrice),
