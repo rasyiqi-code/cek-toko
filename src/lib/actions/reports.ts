@@ -20,11 +20,11 @@ export async function getCategoryReports() {
 
   return categories.map((cat) => {
     const totalItems = cat.products.length
-    const totalStock = cat.products.reduce((acc: number, p) => acc + (p.stock?.quantity || 0), 0)
+    const totalStock = cat.products.reduce((acc: number, p: (typeof cat.products)[0]) => acc + (p.stock?.quantity || 0), 0)
     
-    const currentInventoryValue = cat.products.reduce((acc: number, p) => acc + (Number(p.price) * (p.stock?.quantity || 0)), 0)
+    const currentInventoryValue = cat.products.reduce((acc: number, p: (typeof cat.products)[0]) => acc + (Number(p.price) * (p.stock?.quantity || 0)), 0)
     
-    const auditValue = cat.products.reduce((acc: number, p) => {
+    const auditValue = cat.products.reduce((acc: number, p: (typeof cat.products)[0]) => {
       const latestOpname = p.opnames?.[0]
       return acc + (latestOpname ? Number(latestOpname.value) : 0)
     }, 0)

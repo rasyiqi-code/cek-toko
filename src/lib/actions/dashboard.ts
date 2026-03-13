@@ -24,7 +24,7 @@ export async function getDashboardStats() {
     })
   ])
 
-  const totalValue = stocks.reduce((acc: number, curr) => {
+  const totalValue = stocks.reduce((acc: number, curr: (typeof stocks)[0]) => {
     return acc + (Number(curr.product.buyPrice) * curr.quantity)
   }, 0)
 
@@ -32,10 +32,10 @@ export async function getDashboardStats() {
   const allOpnames = await prisma.stockOpname.findMany({
     where: { product: { storeId: user.storeId } }
   })
-  const totalAuditDiff = allOpnames.reduce((acc: number, curr) => acc + Number(curr.value), 0)
+  const totalAuditDiff = allOpnames.reduce((acc: number, curr: (typeof allOpnames)[0]) => acc + Number(curr.value), 0)
 
-  const todayDifference = todayOpnames.reduce((acc: number, curr) => acc + curr.difference, 0)
-  const todayValueDiff = todayOpnames.reduce((acc: number, curr) => acc + Number(curr.value), 0)
+  const todayDifference = todayOpnames.reduce((acc: number, curr: (typeof todayOpnames)[0]) => acc + curr.difference, 0)
+  const todayValueDiff = todayOpnames.reduce((acc: number, curr: (typeof todayOpnames)[0]) => acc + Number(curr.value), 0)
 
   return {
     totalProducts,
