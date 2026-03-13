@@ -32,7 +32,6 @@ export const viewport: Viewport = {
   themeColor: "#000000",
 }
 
-import { headers } from "next/headers"
 import { Toaster } from "sonner"
 import { QueryProvider } from "@/components/providers"
 import { OnlineStatus } from "@/components/online-status"
@@ -46,9 +45,6 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const user = await getCurrentUser()
-  const headersList = await headers()
-  const pathname = headersList.get("x-invoke-path") || "/"
-  const isLanding = pathname === "/"
 
   return (
     <html lang="id" suppressHydrationWarning>
@@ -58,25 +54,19 @@ export default async function RootLayout({
           <PwaRegister />
           <OnlineStatus />
           <SyncManager />
-          {isLanding ? (
-            <main className="w-full h-full min-h-screen relative overflow-x-hidden">
-              {children}
-            </main>
-          ) : (
-            <div className="flex h-screen w-full bg-[#d8d2c7] overflow-hidden justify-center fixed inset-0">
-              <div className="flex-1 flex lg:p-6 md:p-4 p-0 md:gap-6 gap-0 h-full w-full overflow-hidden">
-                <Sidebar user={user} />
-                <div className="flex-1 flex h-full overflow-hidden">
-                  <div className="w-full h-full bg-background-light md:rounded-[24px] md:shadow-soft md:border md:border-muted/5 flex flex-col overflow-hidden relative">
-                    <main className="scroll-area w-full h-full relative">
-                      {children}
-                    </main>
-                    <BottomNav user={user} />
-                  </div>
+          <div className="flex h-screen w-full bg-[#d8d2c7] overflow-hidden justify-center fixed inset-0">
+            <div className="flex-1 flex lg:p-6 md:p-4 p-0 md:gap-6 gap-0 h-full w-full overflow-hidden">
+              <Sidebar user={user} />
+              <div className="flex-1 flex h-full overflow-hidden">
+                <div className="w-full h-full bg-background-light md:rounded-[24px] md:shadow-soft md:border md:border-muted/5 flex flex-col overflow-hidden relative">
+                  <main className="scroll-area w-full h-full relative">
+                    {children}
+                  </main>
+                  <BottomNav user={user} />
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </QueryProvider>
       </body>
     </html>

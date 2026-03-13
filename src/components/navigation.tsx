@@ -216,11 +216,12 @@ export function BottomNav({ user }: { user?: SessionUser | null }) {
   const role = user?.role || "PENJAGA"
   const navItems = getNavItems(role)
 
+  const isLanding = pathname === "/"
   const isAuthOrLicense = pathname.includes("/login") || 
                          pathname.includes("/register-store") || 
                          pathname.includes("/activate-license") || 
                          pathname === "/dashboard" ||
-                         pathname === "/"
+                         isLanding
 
   if (isAuthOrLicense) return null
 
@@ -254,9 +255,11 @@ export function Sidebar({ user }: { user?: SessionUser | null }) {
   const role = user?.role || "PENJAGA"
   const navItems = getNavItems(role)
 
+  const isLanding = pathname === "/"
   const isAuthOrLicense = pathname.includes("/login") || 
                          pathname.includes("/register-store") || 
-                         pathname.includes("/activate-license")
+                         pathname.includes("/activate-license") ||
+                         isLanding
 
   if (isAuthOrLicense) return null
 
