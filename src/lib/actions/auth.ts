@@ -2,7 +2,6 @@
 
 import { cookies } from "next/headers"
 import { prisma } from "@/lib/prisma"
-import { Prisma } from "@prisma/client"
 import bcrypt from "bcryptjs"
 
 import { decodeSession, SESSION_COOKIE, SESSION_MAX_AGE, encodeSession } from "@/lib/session"
@@ -80,7 +79,7 @@ export async function registerStore(data: {
     const trialDuration = 14 * 24 * 60 * 60 * 1000 // 14 days
     const validUntil = new Date(Date.now() + trialDuration)
 
-    const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    const result = await (prisma as any).$transaction(async (tx: any) => {
       const store = await tx.store.create({
         data: {
           name: data.storeName,
