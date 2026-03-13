@@ -11,7 +11,8 @@ export function proxy(request: NextRequest) {
   const publicRoutes = ["/", "/login", "/register-store"]
   
   if (!token) {
-    if (publicRoutes.includes(pathname) || pathname.startsWith("/_next") || pathname.startsWith("/api") || pathname === "/favicon.ico") {
+    const isStaticAsset = /\.(png|svg|ico|jpg|jpeg|json|sw|js)$/.test(pathname)
+    if (publicRoutes.includes(pathname) || pathname.startsWith("/_next") || pathname.startsWith("/api") || isStaticAsset) {
       return NextResponse.next()
     }
     url.pathname = "/login"
