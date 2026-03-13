@@ -79,7 +79,7 @@ export async function registerStore(data: {
     const trialDuration = 14 * 24 * 60 * 60 * 1000 // 14 days
     const validUntil = new Date(Date.now() + trialDuration)
 
-    const result = await (prisma as any).$transaction(async (tx: any) => {
+    const result = await prisma.$transaction(async (tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0]) => {
       const store = await tx.store.create({
         data: {
           name: data.storeName,
