@@ -140,8 +140,22 @@ export default function ActivateLicensePage() {
         <div className="mt-8 text-center animate-in slide-in-from-bottom-2 duration-700 delay-300">
              <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Hubungi Admin</p>
              <div className="flex justify-center gap-8">
-                <span className="text-emerald-600 text-xs font-black uppercase tracking-widest cursor-pointer hover:text-emerald-500 transition-colors px-2 py-1 rounded-lg hover:bg-emerald-50">WhatsApp</span>
-                <span className="text-blue-600 text-xs font-black uppercase tracking-widest cursor-pointer hover:text-blue-500 transition-colors px-2 py-1 rounded-lg hover:bg-blue-50">Telegram</span>
+                <a 
+                  href="https://wa.me/6285183131249" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-emerald-600 text-xs font-black uppercase tracking-widest cursor-pointer hover:text-emerald-500 transition-colors px-2 py-1 rounded-lg hover:bg-emerald-50"
+                >
+                  WhatsApp
+                </a>
+                <a 
+                  href="https://t.me/crediblemark" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-600 text-xs font-black uppercase tracking-widest cursor-pointer hover:text-blue-500 transition-colors px-2 py-1 rounded-lg hover:bg-blue-50"
+                >
+                  Telegram
+                </a>
              </div>
         </div>
       </div>
